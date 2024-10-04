@@ -9,17 +9,13 @@ LLM_DEFINE_TAG(FDUETweenPoolTag);
 
 void FDUETweenPool::InitTweenPool()
 {
-	LLM_SCOPE_BYTAG(FDUETweenPoolTag);
-	if (TweenPool != nullptr)
-	{
-		delete[] TweenPool;
-	}
+	ClearPool(TweenPool);
 
 	check(GetDefault<UDUETweenSettings>()->InitialTweenPoolSize <= GetDefault<UDUETweenSettings>()->MaxTweenPoolSize)
 
 	CurrentTotalPoolSize = GetDefault<UDUETweenSettings>()->InitialTweenPoolSize;
 
-	TweenPool = new FActiveDUETween[CurrentTotalPoolSize];
+	TweenPool = AllocateNewPool(CurrentTotalPoolSize);
 
 	for (int i = 0; i < CurrentTotalPoolSize - 1; ++i)
 	{
@@ -39,11 +35,31 @@ void FDUETweenPool::InitTweenPool()
 	SET_DWORD_STAT(STAT_TWEEN_POOL_SIZE, CurrentTotalPoolSize);
 }
 
+void FDUETweenPool::ClearPool(FActiveDUETween*& Pool)
+{
+	LLM_SCOPE_BYTAG(FDUETweenPoolTag);
+	if (Pool != nullptr)
+	{
+		delete[] Pool;
+	}
+	Pool = nullptr;
+}
+
+void FDUETweenPool::Deinitialize()
+{
+	ClearPool(TweenPool);
+}
+
+FActiveDUETween* FDUETweenPool::AllocateNewPool(const int& NewPoolSize)
+{
+	LLM_SCOPE_BYTAG(FDUETweenPoolTag);
+	return new FActiveDUETween[NewPoolSize];
+}
+
 void FDUETweenPool::ExpandPool(const int& Amount)
 {
 	DECLARE_CYCLE_STAT(TEXT("ExpandPool"), STAT_ExpandPool, STATGROUP_DUETween);
 	SCOPE_CYCLE_COUNTER(STAT_ExpandPool);
-	LLM_SCOPE_BYTAG(FDUETweenPoolTag);
 	const int MaxPoolSize = GetDefault<UDUETweenSettings>()->MaxTweenPoolSize;
 	if (CurrentTotalPoolSize == MaxPoolSize)
 	{
@@ -53,20 +69,20 @@ void FDUETweenPool::ExpandPool(const int& Amount)
 	}
 
 	const int OldTweenPoolSize = CurrentTotalPoolSize;
-	const FActiveDUETween* OldTweenPool = TweenPool;
+	FActiveDUETween* OldTweenPool = TweenPool;
 
 	CurrentTotalPoolSize = FMath::Min(CurrentTotalPoolSize + Amount, MaxPoolSize);
 	UE_LOG(LogDUETween, Verbose,
-		   TEXT("Allocating: %d"), CurrentTotalPoolSize * static_cast<int>(sizeof(FActiveDUETween)));
-	TweenPool = new FActiveDUETween[CurrentTotalPoolSize];
+	       TEXT("Allocating: %d"), CurrentTotalPoolSize * static_cast<int>(sizeof(FActiveDUETween)));
+	TweenPool = AllocateNewPool(CurrentTotalPoolSize);
 
 	// Copy old pool to new
 	FMemory::Memcpy(TweenPool, OldTweenPool, sizeof(FActiveDUETween) * OldTweenPoolSize);
 
 	// Delete the old pool
 	UE_LOG(LogDUETween, Verbose,
-	   TEXT("De-Allocating: %d"), OldTweenPoolSize * static_cast<int>(sizeof(FActiveDUETween)));
-	delete[] OldTweenPool;
+	       TEXT("De-Allocating: %d"), OldTweenPoolSize * static_cast<int>(sizeof(FActiveDUETween)));
+	ClearPool(OldTweenPool);
 
 	TweenPool[OldTweenPoolSize - 1].TweenPtr.NextFreeTween = OldTweenPoolSize;
 	for (int i = OldTweenPoolSize; i < CurrentTotalPoolSize - 1; ++i)

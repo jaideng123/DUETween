@@ -16,10 +16,13 @@ public:
 	FActiveDUETweenHandle GetTweenFromPool();
 	void ReturnTweenToPool(FActiveDUETweenHandle TweenToReturnHandle);
 	int GetCurrentPoolSize() const;
+	void Deinitialize();
 
 private:
 	int CurrentTotalPoolSize = 0;
 	int CurrentUnusedElements = 0;
 	FActiveDUETween* TweenPool = nullptr;
 	FActiveDUETweenHandle NextAvailableTween = NULL_DUETWEEN_HANDLE;
+	static void ClearPool(FActiveDUETween*& Pool);
+	static FActiveDUETween* AllocateNewPool(const int& NewPoolSize);
 };

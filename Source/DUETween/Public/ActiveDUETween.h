@@ -127,12 +127,12 @@ struct FDUETweenData
 {
 	FTweenCallback UpdateCallback;
 	FProperty* TargetProperty;
-
 	EDueUpdateType UpdateType = EDueUpdateType::Unset;
+	
+	EDueValueType ValueType = EDueValueType::Float;
 
 	FValueContainer TargetValue;
 	FValueContainer StartingValue;
-	EDueValueType ValueType = EDueValueType::Float;
 
 	TWeakObjectPtr<UObject> Target;
 	float Duration = 0;
@@ -168,5 +168,3 @@ struct FActiveDUETween
 	EDUETweenStatus Status = EDUETweenStatus::Unset;
 	FValueContainer StartingValue;
 };
-
-static_assert(std::is_trivially_copyable_v<EDUETweenStatus> == true);

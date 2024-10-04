@@ -17,6 +17,7 @@ void UDUETweenSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 void UDUETweenSubsystem::Deinitialize()
 {
+	Pool.Deinitialize();
 	Super::Deinitialize();
 }
 
