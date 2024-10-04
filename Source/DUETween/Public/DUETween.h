@@ -54,7 +54,7 @@ public:
 	// Start Tween with callback update function
 	template <typename T>
 	static FActiveDUETweenHandle StartDUETween(const TWeakObjectPtr<UObject>& Target,
-	                                        FTweenCallback& UpdateCallback,
+	                                        FTweenCallback UpdateCallback,
 	                                        const T& StartingValue,
 	                                        const T& TargetValue,
 	                                        const float& Duration,
@@ -69,7 +69,7 @@ public:
 		TweenData.EasingType = Easing;
 		TweenData.Steps = Steps;
 		TweenData.UpdateType = EDueUpdateType::Function;
-		TweenData.UpdateCallback = std::move(UpdateCallback);
+		TweenData.UpdateCallback = UpdateCallback;
 		TweenData.StartingValue.SetSubtype<T>(StartingValue);
 		TweenData.TargetValue.SetSubtype<T>(TargetValue);
 		constexpr EDueValueType ValueType = GetDueValueType<T>();

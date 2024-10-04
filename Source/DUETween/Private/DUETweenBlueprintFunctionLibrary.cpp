@@ -22,7 +22,7 @@ void UDUETweenBlueprintFunctionLibrary::DueMove(UObject* Target,
 		if (const USceneComponent* TargetAsSceneComponent = Cast<USceneComponent>(Target);
 			TargetAsSceneComponent)
 		{
-			FVector StartingValue = TargetAsSceneComponent->GetRelativeLocation();
+			const FVector StartingValue = TargetAsSceneComponent->GetRelativeLocation();
 			FTweenCallback TargetCallback = [](const FValueContainer& UpdatedValue,
 			                                   const TWeakObjectPtr<UObject>& TargetToUpdate)
 			{

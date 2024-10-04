@@ -8,7 +8,7 @@ typedef int FActiveDUETweenHandle;
 constexpr FActiveDUETweenHandle NULL_DUETWEEN_HANDLE = -1;
 
 using FValueContainer = TUnion<FVector, FVector2D, FRotator, float, double>;
-using FTweenCallback = TUniqueFunction<void(const FValueContainer&, const TWeakObjectPtr<UObject>&)>;
+using FTweenCallback = TFunction<void(const FValueContainer&, const TWeakObjectPtr<UObject>&)>;
 
 /**
  * Status of a tween

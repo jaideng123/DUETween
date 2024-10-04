@@ -82,6 +82,8 @@ void FDUETweenPool::ExpandPool(const int& Amount)
 	// Delete the old pool
 	UE_LOG(LogDUETween, Verbose,
 	       TEXT("De-Allocating: %d"), OldTweenPoolSize * static_cast<int>(sizeof(FActiveDUETween)));
+	// TODO: this keeps me from losing function memory, but may be bad long term, keep an eye on it
+	FMemory::Memzero(OldTweenPool, sizeof(FActiveDUETween) * OldTweenPoolSize);
 	ClearPool(OldTweenPool);
 
 	TweenPool[OldTweenPoolSize - 1].TweenPtr.NextFreeTween = OldTweenPoolSize;
