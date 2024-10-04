@@ -151,6 +151,7 @@ void FDUETweenPool::ReturnTweenToPool(FActiveDUETweenHandle TweenToReturnHandle)
 		                   STATGROUP_DUETween);
 		SCOPE_CYCLE_COUNTER(STAT_ReturnTweenToPool_AddToFreeList);
 		TweenToReturn->Status = EDUETweenStatus::Unset;
+		TweenToReturn->TweenData.UpdateCallback = nullptr;
 		TweenToReturn->TweenPtr.NextFreeTween = NextAvailableTween;
 		NextAvailableTween = TweenToReturn->Handle;
 
