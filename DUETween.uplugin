@@ -1,0 +1,23 @@
+﻿{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "DUETween",
+	"Description": "DUETween is a framework for adding quick animations to things. Supports C++ and BP",
+	"Category": "Other",
+	"CreatedBy": "Jaiden Gerig",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "DUETween",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
