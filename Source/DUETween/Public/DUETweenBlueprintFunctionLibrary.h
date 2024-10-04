@@ -129,6 +129,6 @@ public:
 	static void StopDUETween(UObject* Target, const int& DUETweenHandle, bool& Success);
 
 private:
-	static FActiveDUETweenHandle CreateAndStartLatentAction(UWorld* World, const FLatentActionInfo& LatentInfo,
-	                                                        const FActiveDUETweenHandle& TweenHandle);
+	static FActiveDUETweenHandle CreateAndStartLatentAction(UObject* Target,
+	                                                        const FLatentActionInfo& LatentInfo, const FActiveDUETweenHandle& TweenHandle);
 };

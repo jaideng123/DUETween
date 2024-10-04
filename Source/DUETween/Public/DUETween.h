@@ -81,6 +81,24 @@ public:
 		return World->GetSubsystem<UDUETweenSubsystem>()->AddTween(TweenData);
 	}
 
+	static FActiveDUETweenHandle DUEMove(const TWeakObjectPtr<UObject>& Target,
+										   const FVector& TargetValue,
+										   const float& Duration,
+										   const EDueEasingType& Easing = EDueEasingType::InOutSin,
+										   const int32& Steps = 0);
+
+	static FActiveDUETweenHandle DUERotate(const TWeakObjectPtr<UObject>& Target,
+									   const FRotator& TargetValue,
+									   const float& Duration,
+									   const EDueEasingType& Easing = EDueEasingType::InOutSin,
+									   const int32& Steps = 0);
+
+	static FActiveDUETweenHandle DUEMove2D(const TWeakObjectPtr<UObject>& Target,
+								   const FVector2D& TargetValue,
+								   const float& Duration,
+								   const EDueEasingType& Easing = EDueEasingType::InOutSin,
+								   const int32& Steps = 0);
+
 	// Pauses a currently running tween (returns true if successful)
 	static bool PauseDUETween(const TWeakObjectPtr<UObject>& Target, const FActiveDUETweenHandle& DUETweenHandle);
 
