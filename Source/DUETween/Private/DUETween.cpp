@@ -22,7 +22,7 @@ FActiveDUETweenHandle DUETween::DUEMove(const TWeakObjectPtr<UObject>& Target, c
 		TargetAsSceneComponent)
 	{
 		const FVector StartingValue = TargetAsSceneComponent->GetRelativeLocation();
-		FTweenCallback TargetCallback = [TargetAsSceneComponent](const FValueContainer& UpdatedValue,
+		FTweenCallback TargetCallback = [](const FValueContainer& UpdatedValue,
 		                                                         const TWeakObjectPtr<UObject>& TargetToUpdate)
 		{
 			USceneComponent* SceneComp = Cast<USceneComponent>(TargetToUpdate.Get());

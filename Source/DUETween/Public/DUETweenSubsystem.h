@@ -12,7 +12,7 @@
  * World Subsystem that manages and ticks tweens
  */
 UCLASS()
-class UDUETweenSubsystem : public UTickableWorldSubsystem
+class DUETWEEN_API UDUETweenSubsystem : public UTickableWorldSubsystem
 {
 	GENERATED_BODY()
 public:
