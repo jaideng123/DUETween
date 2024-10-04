@@ -8,11 +8,11 @@ public:
 	// Start Tween with property pointer
 	template <typename T>
 	static FActiveDUETweenHandle StartDUETween(const TWeakObjectPtr<UObject>& Target,
-	                                        FProperty* Property,
-	                                        const T& TargetValue,
-	                                        const float& Duration,
-	                                        const EDueEasingType& Easing = EDueEasingType::InOutSin,
-	                                        const int32& Steps = 0)
+	                                           FProperty* Property,
+	                                           const T& TargetValue,
+	                                           const float& Duration,
+	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin,
+	                                           const int32& Steps = 0)
 	{
 		static_assert(GetDueValueTypeConst<T>() == EDueValueType::Unset, "Unsupported Type");
 
@@ -34,11 +34,11 @@ public:
 	// Start Tween with property name
 	template <typename T>
 	static FActiveDUETweenHandle StartDUETween(const TWeakObjectPtr<UObject>& Target,
-	                                        const FName& PropertyName,
-	                                        const T& TargetValue,
-	                                        const float& Duration,
-	                                        const EDueEasingType& Easing = EDueEasingType::InOutSin,
-	                                        const int32& Steps = 0)
+	                                           const FName& PropertyName,
+	                                           const T& TargetValue,
+	                                           const float& Duration,
+	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin,
+	                                           const int32& Steps = 0)
 	{
 		static_assert(GetDueValueTypeConst<T>() == EDueValueType::Unset, "Unsupported Type");
 
@@ -54,22 +54,24 @@ public:
 	// Start Tween with callback update function
 	template <typename T>
 	static FActiveDUETweenHandle StartDUETween(const TWeakObjectPtr<UObject>& Target,
-	                                        FTweenCallback UpdateCallback,
-	                                        const T& StartingValue,
-	                                        const T& TargetValue,
-	                                        const float& Duration,
-	                                        const EDueEasingType& Easing = EDueEasingType::InOutSin,
-	                                        const int32& Steps = 0)
+	                                           FTweenCallback& UpdateCallback,
+	                                           const T& StartingValue,
+	                                           const T& TargetValue,
+	                                           const float& Duration,
+	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin,
+	                                           const int32& Steps = 0)
 	{
 		static_assert(GetDueValueTypeConst<T>() == EDueValueType::Unset, "Unsupported Type");
 
+		UpdateCallback.CheckCallable();
+		
 		FDUETweenData TweenData;
 		TweenData.Target = Target;
 		TweenData.Duration = Duration;
 		TweenData.EasingType = Easing;
 		TweenData.Steps = Steps;
 		TweenData.UpdateType = EDueUpdateType::Function;
-		TweenData.UpdateCallback = UpdateCallback;
+		TweenData.UpdateCallback = MoveTemp(UpdateCallback);
 		TweenData.StartingValue.SetSubtype<T>(StartingValue);
 		TweenData.TargetValue.SetSubtype<T>(TargetValue);
 		constexpr EDueValueType ValueType = GetDueValueType<T>();
@@ -78,10 +80,10 @@ public:
 		const UWorld* World = Target.Get()->GetWorld();
 		return World->GetSubsystem<UDUETweenSubsystem>()->AddTween(TweenData);
 	}
-	
+
 	// Pauses a currently running tween (returns true if successful)
 	static bool PauseDUETween(const TWeakObjectPtr<UObject>& Target, const FActiveDUETweenHandle& DUETweenHandle);
-	
+
 	// Resumes a paused tween (returns true if successful)
 	static bool ResumeDUETween(const TWeakObjectPtr<UObject>& Target, const FActiveDUETweenHandle& DUETweenHandle);
 

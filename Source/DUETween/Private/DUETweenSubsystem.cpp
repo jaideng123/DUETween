@@ -50,7 +50,7 @@ FActiveDUETweenHandle UDUETweenSubsystem::AddTween(FDUETweenData& TweenData)
 	{
 		DECLARE_CYCLE_STAT(TEXT("AddTween_Init"), STAT_AddTween_Init, STATGROUP_DUETween);
 		SCOPE_CYCLE_COUNTER(STAT_AddTween_Init);
-		NewTweenObject->TweenData = TweenData;
+		NewTweenObject->TweenData = MoveTemp(TweenData);
 		NewTweenObject->Status = EDUETweenStatus::Running;
 		NewTweenObject->TimeElapsed = 0;
 		NewTweenObject->StartingValue = TweenData.StartingValue.GetCurrentSubtypeIndex() == static_cast<uint8>(-1)

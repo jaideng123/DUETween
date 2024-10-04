@@ -8,7 +8,7 @@ typedef int FActiveDUETweenHandle;
 constexpr FActiveDUETweenHandle NULL_DUETWEEN_HANDLE = -1;
 
 using FValueContainer = TUnion<FVector, FVector2D, FRotator, float, double>;
-using FTweenCallback = TFunction<void(const FValueContainer&, const TWeakObjectPtr<UObject>&)>;
+using FTweenCallback = TUniqueFunction<void(const FValueContainer&, const TWeakObjectPtr<UObject>&)>;
 
 /**
  * Status of a tween
@@ -78,7 +78,7 @@ constexpr EDueValueType GetDueValueTypeConst()
 }
 
 
-// This is necessary because above only works as constexpr and this doesnt
+// This is necessary because above only works at compile time and this only works at runtime
 template <typename T>
 constexpr EDueValueType GetDueValueType()
 {
@@ -138,6 +138,45 @@ struct FDUETweenData
 	float Duration = 0;
 	EDueEasingType EasingType = EDueEasingType::Linear;
 	int32 Steps = 0;
+
+	FDUETweenData()
+	{
+		TargetProperty = nullptr;
+		UpdateCallback = nullptr;
+	};
+
+	FDUETweenData(FDUETweenData&& Other) noexcept
+		: UpdateCallback(std::move(Other.UpdateCallback)),
+		  TargetProperty(Other.TargetProperty),
+		  UpdateType(Other.UpdateType),
+		  ValueType(Other.ValueType),
+		  TargetValue(std::move(Other.TargetValue)),
+		  StartingValue(std::move(Other.StartingValue)),
+		  Target(std::move(Other.Target)),
+		  Duration(Other.Duration),
+		  EasingType(Other.EasingType),
+		  Steps(Other.Steps)
+	{
+	}
+	
+
+	FDUETweenData& operator=(FDUETweenData&& Other) noexcept
+	{
+		if (this == &Other)
+			return *this;
+		UpdateCallback = std::move(Other.UpdateCallback);
+		Other.UpdateCallback = nullptr;
+		TargetProperty = Other.TargetProperty;
+		UpdateType = Other.UpdateType;
+		ValueType = Other.ValueType;
+		TargetValue = std::move(Other.TargetValue);
+		StartingValue = std::move(Other.StartingValue);
+		Target = std::move(Other.Target);
+		Duration = Other.Duration;
+		EasingType = Other.EasingType;
+		Steps = Other.Steps;
+		return *this;
+	}
 };
 
 /**
