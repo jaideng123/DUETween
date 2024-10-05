@@ -89,4 +89,14 @@ public:
 	static double EaseInBounce(const double& Alpha);
 	static double EaseOutBounce(const double& Alpha);
 	static double EaseInOutBounce(const double& Alpha);
+
+private:
+	UE_NODISCARD static constexpr FORCEINLINE double Quart(const double& Value)
+	{
+		return Value * Value * Value * Value;
+	}
+	UE_NODISCARD static constexpr FORCEINLINE double Quint(const double& Value)
+	{
+		return Value * Value * Value * Value * Value;
+	}
 };

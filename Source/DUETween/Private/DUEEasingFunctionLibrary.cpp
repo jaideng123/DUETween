@@ -144,7 +144,7 @@ double DUEEasingFunctionLibrary::EaseOutQuad(const double& Alpha)
 
 double DUEEasingFunctionLibrary::EaseInOutQuad(const double& Alpha)
 {
-	return Alpha < 0.5 ? 2.0 * FMath::Square(Alpha) : 1.0 - (FMath::Pow(-2.0 * Alpha + 2.0, 2.0) / 2.0);
+	return Alpha < 0.5 ? 2.0 * FMath::Square(Alpha) : 1.0 - (FMath::Square(-2.0 * Alpha + 2.0) / 2.0);
 }
 
 double DUEEasingFunctionLibrary::EaseInCubic(const double& Alpha)
@@ -164,32 +164,32 @@ double DUEEasingFunctionLibrary::EaseInOutCubic(const double& Alpha)
 
 double DUEEasingFunctionLibrary::EaseInQuart(const double& Alpha)
 {
-	return FMath::Pow(Alpha, 4.0);
+	return Quart(Alpha);
 }
 
 double DUEEasingFunctionLibrary::EaseOutQuart(const double& Alpha)
 {
-	return 1.0 - FMath::Pow(1.0 - Alpha, 4.0);
+	return 1.0 - Quart(1.0 - Alpha);
 }
 
 double DUEEasingFunctionLibrary::EaseInOutQuart(const double& Alpha)
 {
-	return Alpha < 0.5 ? 8.0 * FMath::Pow(Alpha, 4.0) : 1.0 - (FMath::Pow(-2.0 * Alpha + 2.0, 4.0) / 2.0);
+	return Alpha < 0.5 ? 8.0 * Quart(Alpha) : 1.0 - (Quart(-2.0 * Alpha + 2.0) / 2.0);
 }
 
 double DUEEasingFunctionLibrary::EaseInQuint(const double& Alpha)
 {
-	return FMath::Pow(Alpha, 5.0);
+	return Quint(Alpha);
 }
 
 double DUEEasingFunctionLibrary::EaseOutQuint(const double& Alpha)
 {
-	return 1.0 - FMath::Pow(1.0 - Alpha, 5.0);
+	return 1.0 - Quint(1.0 - Alpha);
 }
 
 double DUEEasingFunctionLibrary::EaseInOutQuint(const double& Alpha)
 {
-	return Alpha < 0.5 ? 16.0 * FMath::Pow(Alpha, 5.0) : 1.0 - (FMath::Pow(-2.0 * Alpha + 2.0, 5.0) / 2.0);
+	return Alpha < 0.5 ? 16.0 * Quint(Alpha) : 1.0 - (Quint(-2.0 * Alpha + 2.0) / 2.0);
 }
 
 double DUEEasingFunctionLibrary::EaseInExpo(const double& Alpha)
