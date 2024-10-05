@@ -17,7 +17,7 @@ void FDUETweenPool::InitTweenPool()
 
 	TweenPool = ReallocatePool(nullptr, CurrentTotalPoolSize);
 	
-	for (int i = 0; i < CurrentTotalPoolSize - 1; ++i)
+	for (int i = 0; i < CurrentTotalPoolSize; ++i)
 	{
 		TweenPool[i].TweenPtr.NextFreeTween = i != (CurrentTotalPoolSize - 1) ? i + 1 : NULL_DUETWEEN_HANDLE;
 		TweenPool[i].Status = EDUETweenStatus::Unset;
