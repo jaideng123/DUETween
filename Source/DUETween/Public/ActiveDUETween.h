@@ -143,7 +143,7 @@ struct FDUETweenData
 	{
 		TargetProperty = nullptr;
 		UpdateCallback = nullptr;
-	};
+	}
 
 	FDUETweenData(FDUETweenData&& Other) noexcept
 		: UpdateCallback(std::move(Other.UpdateCallback)),
@@ -158,7 +158,7 @@ struct FDUETweenData
 		  Steps(Other.Steps)
 	{
 	}
-	
+
 
 	FDUETweenData& operator=(FDUETweenData&& Other) noexcept
 	{

@@ -15,19 +15,17 @@ void FDUETweenPool::InitTweenPool()
 
 	CurrentTotalPoolSize = GetDefault<UDUETweenSettings>()->InitialTweenPoolSize;
 
-	TweenPool = AllocateNewPool(CurrentTotalPoolSize);
-
+	TweenPool = ReallocatePool(nullptr, CurrentTotalPoolSize);
+	
 	for (int i = 0; i < CurrentTotalPoolSize - 1; ++i)
 	{
-		TweenPool[i].TweenPtr.NextFreeTween = FActiveDUETweenHandle(i + 1);
+		TweenPool[i].TweenPtr.NextFreeTween = i != (CurrentTotalPoolSize - 1) ? i + 1 : NULL_DUETWEEN_HANDLE;
 		TweenPool[i].Status = EDUETweenStatus::Unset;
 		TweenPool[i].ID = 0;
 		TweenPool[i].Handle = i;
+		// Memzeroing this because Tween Data is move only (due to tfunction) and we need to avoid garbage
+		FMemory::Memzero(&TweenPool[i].TweenData, sizeof(FDUETweenData));
 	}
-	TweenPool[CurrentTotalPoolSize - 1].TweenPtr.NextFreeTween = NULL_DUETWEEN_HANDLE;
-	TweenPool[CurrentTotalPoolSize - 1].Status = EDUETweenStatus::Unset;
-	TweenPool[CurrentTotalPoolSize - 1].ID = 0;
-	TweenPool[CurrentTotalPoolSize - 1].Handle = CurrentTotalPoolSize - 1;
 
 	NextAvailableTween = 0;
 
@@ -38,9 +36,14 @@ void FDUETweenPool::InitTweenPool()
 void FDUETweenPool::ClearPool(FActiveDUETween*& Pool)
 {
 	LLM_SCOPE_BYTAG(FDUETweenPoolTag);
+	for (int i = 0; i < CurrentTotalPoolSize; ++i)
+	{
+		// Need to do this so tfunctions release their memory
+		Pool[i].TweenData = FDUETweenData();
+	}
 	if (Pool != nullptr)
 	{
-		delete[] Pool;
+		FMemory::Free(Pool);
 	}
 	Pool = nullptr;
 }
@@ -54,6 +57,12 @@ FActiveDUETween* FDUETweenPool::AllocateNewPool(const int& NewPoolSize)
 {
 	LLM_SCOPE_BYTAG(FDUETweenPoolTag);
 	return new FActiveDUETween[NewPoolSize];
+}
+
+FActiveDUETween* FDUETweenPool::ReallocatePool(FActiveDUETween* OldPool, const int& NewPoolSize)
+{
+	LLM_SCOPE_BYTAG(FDUETweenPoolTag);
+	return static_cast<FActiveDUETween*>(FMemory::Realloc(OldPool, NewPoolSize * sizeof(FActiveDUETween)));
 }
 
 void FDUETweenPool::ExpandPool(const int& Amount)
@@ -73,31 +82,20 @@ void FDUETweenPool::ExpandPool(const int& Amount)
 
 	CurrentTotalPoolSize = FMath::Min(CurrentTotalPoolSize + Amount, MaxPoolSize);
 	UE_LOG(LogDUETween, Verbose,
-	       TEXT("Allocating: %d"), CurrentTotalPoolSize * static_cast<int>(sizeof(FActiveDUETween)));
-	TweenPool = AllocateNewPool(CurrentTotalPoolSize);
-
-	// Copy old pool to new
-	FMemory::Memcpy(TweenPool, OldTweenPool, sizeof(FActiveDUETween) * OldTweenPoolSize);
-
-	// Delete the old pool
-	UE_LOG(LogDUETween, Verbose,
-	       TEXT("De-Allocating: %d"), OldTweenPoolSize * static_cast<int>(sizeof(FActiveDUETween)));
-	// TODO: this keeps me from losing function memory, but may be bad long term, keep an eye on it
-	FMemory::Memzero(OldTweenPool, sizeof(FActiveDUETween) * OldTweenPoolSize);
-	ClearPool(OldTweenPool);
+	       TEXT("Reallocating: %d"), CurrentTotalPoolSize * static_cast<int>(sizeof(FActiveDUETween)));
+	TweenPool = ReallocatePool(OldTweenPool, CurrentTotalPoolSize);
 
 	TweenPool[OldTweenPoolSize - 1].TweenPtr.NextFreeTween = OldTweenPoolSize;
-	for (int i = OldTweenPoolSize; i < CurrentTotalPoolSize - 1; ++i)
+	for (int i = OldTweenPoolSize; i < CurrentTotalPoolSize; ++i)
 	{
-		TweenPool[i].TweenPtr.NextFreeTween = i + 1;
+		TweenPool[i].TweenPtr.NextFreeTween = i != (CurrentTotalPoolSize - 1) ? i + 1 : NULL_DUETWEEN_HANDLE;
 		TweenPool[i].Status = EDUETweenStatus::Unset;
 		TweenPool[i].ID = 0;
 		TweenPool[i].Handle = i;
+		// Memzeroing this because Tween Data is move only (due to tfunction) and we need to avoid garbage
+		FMemory::Memzero(&TweenPool[i].TweenData, sizeof(FDUETweenData));
 	}
-	TweenPool[CurrentTotalPoolSize - 1].TweenPtr.NextFreeTween = NULL_DUETWEEN_HANDLE;
-	TweenPool[CurrentTotalPoolSize - 1].Status = EDUETweenStatus::Unset;
-	TweenPool[CurrentTotalPoolSize - 1].ID = 0;
-	TweenPool[CurrentTotalPoolSize - 1].Handle = CurrentTotalPoolSize - 1;
+
 	if (NextAvailableTween == NULL_DUETWEEN_HANDLE)
 	{
 		NextAvailableTween = OldTweenPoolSize;
@@ -155,6 +153,8 @@ void FDUETweenPool::ReturnTweenToPool(FActiveDUETweenHandle TweenToReturnHandle)
 		TweenToReturn->Status = EDUETweenStatus::Unset;
 		TweenToReturn->TweenData.UpdateCallback = nullptr;
 		TweenToReturn->TweenPtr.NextFreeTween = NextAvailableTween;
+		// Need to do this so tfunctions release their memory
+		TweenToReturn->TweenData = FDUETweenData();
 		NextAvailableTween = TweenToReturn->Handle;
 
 		INC_DWORD_STAT(STAT_POOLED_TWEENS);

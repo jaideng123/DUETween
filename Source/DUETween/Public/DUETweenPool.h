@@ -19,10 +19,12 @@ public:
 	void Deinitialize();
 
 private:
+	TArray<int> Test;
 	int CurrentTotalPoolSize = 0;
 	int CurrentUnusedElements = 0;
 	FActiveDUETween* TweenPool = nullptr;
 	FActiveDUETweenHandle NextAvailableTween = NULL_DUETWEEN_HANDLE;
-	static void ClearPool(FActiveDUETween*& Pool);
+	void ClearPool(FActiveDUETween*& Pool);
 	static FActiveDUETween* AllocateNewPool(const int& NewPoolSize);
+	FActiveDUETween* ReallocatePool(FActiveDUETween* OldPool, const int& NewPoolSize);
 };
