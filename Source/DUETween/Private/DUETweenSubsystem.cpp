@@ -278,8 +278,8 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 
 				UE_LOG(LogDUETween, Verbose, TEXT("Updating Rotator Value: %s"), *NewValue.ToString());
 				UpdatedValue.SetSubtype<FRotator>(NewValue);
+				break;
 			}
-			break;
 		case EDueValueType::Vector2D:
 			{
 				const double Alpha = DUEEasingFunctionLibrary::Ease(0,
@@ -294,9 +294,8 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 				UpdatedValue.SetSubtype<FVector2D>(NewValue);
 				break;
 			}
-			break;
 		}
-		if (UpdatedValue.GetCurrentSubtypeIndex() == static_cast<uint8>(-1))
+		if (UpdatedValue.GetCurrentSubtypeIndex() != static_cast<uint8>(-1))
 		{
 			FDUETweenInternalUtils::SetCurrentValue(CurrentTween->TweenData, UpdatedValue);
 		}
