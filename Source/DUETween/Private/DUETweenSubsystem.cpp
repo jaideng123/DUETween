@@ -222,6 +222,7 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 		DECLARE_CYCLE_STAT(TEXT("ProgressTween"), STAT_ProgressTween, STATGROUP_DUETween);
 		SCOPE_CYCLE_COUNTER(STAT_ProgressTween);
 
+		FValueContainer UpdatedValue;
 		switch (CurrentTween->TweenData.ValueType)
 		{
 		case EDueValueType::Float:
@@ -233,7 +234,7 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 				                                                      CurrentTween->TweenData.EasingType,
 				                                                      CurrentTween->TweenData.Steps);
 				UE_LOG(LogDUETween, Verbose, TEXT("Updating Float Value:: %f"), NewValue);
-				FDUETweenInternalUtils::SetCurrentValue(CurrentTween->TweenData, FValueContainer(NewValue));
+				UpdatedValue.SetSubtype<float>(NewValue);
 				break;
 			}
 		case EDueValueType::Double:
@@ -245,7 +246,7 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 				                                                       CurrentTween->TweenData.EasingType,
 				                                                       CurrentTween->TweenData.Steps);
 				UE_LOG(LogDUETween, Verbose, TEXT("Updating Double Value:: %f"), NewValue);
-				FDUETweenInternalUtils::SetCurrentValue(CurrentTween->TweenData, FValueContainer(NewValue));
+				UpdatedValue.SetSubtype<double>(NewValue);
 				break;
 			}
 		case EDueValueType::Vector:
@@ -258,7 +259,7 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 				const FVector NewValue = FMath::Lerp(CurrentTween->StartingValue.GetSubtype<FVector>(),
 				                                     CurrentTween->TweenData.TargetValue.GetSubtype<FVector>(), Alpha);
 				UE_LOG(LogDUETween, Verbose, TEXT("Updating Vector Value: %s"), *NewValue.ToString());
-				FDUETweenInternalUtils::SetCurrentValue(CurrentTween->TweenData, FValueContainer(NewValue));
+				UpdatedValue.SetSubtype<FVector>(NewValue);
 				break;
 			}
 		case EDueValueType::Rotator:
@@ -276,7 +277,7 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 				);
 
 				UE_LOG(LogDUETween, Verbose, TEXT("Updating Rotator Value: %s"), *NewValue.ToString());
-				FDUETweenInternalUtils::SetCurrentValue(CurrentTween->TweenData, FValueContainer(NewValue));
+				UpdatedValue.SetSubtype<FRotator>(NewValue);
 			}
 			break;
 		case EDueValueType::Vector2D:
@@ -290,11 +291,16 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 				                                       CurrentTween->TweenData.TargetValue.GetSubtype<FVector2D>(),
 				                                       Alpha);
 				UE_LOG(LogDUETween, Verbose, TEXT("Updating Vector 2D Value: %s"), *NewValue.ToString());
-				FDUETweenInternalUtils::SetCurrentValue(CurrentTween->TweenData, FValueContainer(NewValue));
+				UpdatedValue.SetSubtype<FVector2D>(NewValue);
 				break;
 			}
 			break;
 		}
+		if (UpdatedValue.GetCurrentSubtypeIndex() == static_cast<uint8>(-1))
+		{
+			FDUETweenInternalUtils::SetCurrentValue(CurrentTween->TweenData, UpdatedValue);
+		}
+
 		if (TweenProgress >= 1.0)
 		{
 			CurrentTween->Status = EDUETweenStatus::Completed;
