@@ -44,6 +44,8 @@ public:
 	void TickTween(float DeltaTime, FActiveDUETween* CurrentTween);
 
 private:
+	// Extra debug checks as guardrails during development
+	void ValidateTweenData(const FDUETweenData& TweenData);
 	FDUETweenPool Pool = FDUETweenPool();
 	void RemoveTweenFromActiveChain(FActiveDUETweenHandle TweenHandleToRemove);
 	FActiveDUETweenHandle ActiveTweenChainStart = NULL_DUETWEEN_HANDLE;

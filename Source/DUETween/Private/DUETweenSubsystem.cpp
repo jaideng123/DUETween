@@ -4,6 +4,7 @@
 #include "DUETweenSubsystem.h"
 
 #include "DUETweenInternalUtils.h"
+#include "Logging/StructuredLog.h"
 DECLARE_DWORD_ACCUMULATOR_STAT(TEXT("Active Tweens"), STAT_ACTIVE_TWEENS, STATGROUP_DUETween);
 
 
@@ -31,6 +32,7 @@ FActiveDUETweenHandle UDUETweenSubsystem::AddTween(FDUETweenData& TweenData)
 	DECLARE_CYCLE_STAT(TEXT("AddTween"), STAT_AddTween, STATGROUP_DUETween);
 	SCOPE_CYCLE_COUNTER(STAT_AddTween);
 	FActiveDUETween* NewTweenObject = GetTweenFromHandle(Pool.GetTweenFromPool());
+	ValidateTweenData(TweenData);
 	if (NewTweenObject == nullptr)
 	{
 		return NULL_DUETWEEN_HANDLE;
@@ -314,6 +316,46 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 		RemoveTweenFromActiveChain(CurrentTween->Handle);
 		Pool.ReturnTweenToPool(CurrentTween->Handle);
 	}
+}
+
+void UDUETweenSubsystem::ValidateTweenData(const FDUETweenData& TweenData)
+{
+#if !UE_BUILD_SHIPPING
+	if (TweenData.TargetValue.GetCurrentSubtypeIndex() == static_cast<uint8>(-1))
+	{
+		UE_LOGFMT(LogDUETween, Error, "Attempting to create Tween on {0} with no target value set",
+		          TweenData.Target.Get()->GetName());
+	}
+	if (TweenData.ValueType == EDueValueType::Unset)
+	{
+		UE_LOGFMT(LogDUETween, Error, "Attempting to create Tween on {0} with no value type set",
+		          TweenData.Target.Get()->GetName());
+	}
+	if (TweenData.UpdateType == EDueUpdateType::Unset)
+	{
+		UE_LOGFMT(LogDUETween, Error, "Attempting to create Tween on {0} with no update type set",
+		          TweenData.Target.Get()->GetName());
+	}
+	// Currently we only check for other properties
+	if(TweenData.TargetProperty != nullptr)
+	{
+		FActiveDUETweenHandle CurrentTweenHandle = ActiveTweenChainStart;
+		while (CurrentTweenHandle != NULL_DUETWEEN_HANDLE)
+		{
+			FActiveDUETween* CurrentTween = GetTweenFromHandle(CurrentTweenHandle);
+			if (CurrentTween->TweenData.Target != nullptr &&
+				CurrentTween->TweenData.TargetProperty == TweenData.TargetProperty &&
+				CurrentTween->Status == EDUETweenStatus::Running &&
+				CurrentTween->TweenData.Target.HasSameIndexAndSerialNumber(TweenData.Target.Get()))
+			{
+				UE_LOGFMT(LogDUETween, Error, "Creating Tween on {0} that is already actively tweening property {1}",
+						  TweenData.Target.Get()->GetName(), TweenData.TargetProperty->GetName());
+			}
+
+			CurrentTweenHandle = CurrentTween->TweenPtr.NextFreeTween;
+		}
+	}
+#endif
 }
 
 void UDUETweenSubsystem::RemoveTweenFromActiveChain(FActiveDUETweenHandle TweenHandleToRemove)
