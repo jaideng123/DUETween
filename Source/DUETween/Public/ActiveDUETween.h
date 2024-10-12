@@ -8,7 +8,7 @@ typedef int FActiveDUETweenHandle;
 constexpr FActiveDUETweenHandle NULL_DUETWEEN_HANDLE = -1;
 
 using FValueContainer = TUnion<FVector, FVector2D, FRotator, float, double>;
-using FTweenCallback = TUniqueFunction<void(const FValueContainer&, const TWeakObjectPtr<UObject>&)>;
+using FTweenUpdateCallback = TUniqueFunction<void(const FValueContainer&)>;
 
 /**
  * Status of a tween
@@ -125,7 +125,8 @@ enum class EDueUpdateType
  */
 struct FDUETweenData
 {
-	FTweenCallback UpdateCallback;
+	FTweenUpdateCallback UpdateCallback;
+	FTweenUpdateCallback CompletionCallback;
 	FProperty* TargetProperty;
 	EDueUpdateType UpdateType = EDueUpdateType::Unset;
 	
@@ -138,6 +139,8 @@ struct FDUETweenData
 	float Duration = 0;
 	EDueEasingType EasingType = EDueEasingType::Linear;
 	int32 Steps = 0;
+	int32 LoopCount = 0;
+	bool ShouldYoYo = false;
 
 	FDUETweenData()
 	{
@@ -206,4 +209,5 @@ struct FActiveDUETween
 	float TimeElapsed = 0;
 	EDUETweenStatus Status = EDUETweenStatus::Unset;
 	FValueContainer StartingValue;
+	bool IsReversing = false;
 };

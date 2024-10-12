@@ -54,7 +54,7 @@ public:
 	// Start Tween with callback update function
 	template <typename T>
 	static FActiveDUETweenHandle StartDUETween(const TWeakObjectPtr<UObject>& Target,
-	                                           FTweenCallback& UpdateCallback,
+	                                           FTweenUpdateCallback& UpdateCallback,
 	                                           const T& StartingValue,
 	                                           const T& TargetValue,
 	                                           const float& Duration,

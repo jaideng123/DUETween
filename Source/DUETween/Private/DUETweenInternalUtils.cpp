@@ -195,7 +195,7 @@ void FDUETweenInternalUtils::SetCurrentValue(const FDUETweenData& TweenData, con
 	}
 	if (TweenData.UpdateType == EDueUpdateType::Function)
 	{
-		TweenData.UpdateCallback(NewValue, TweenData.Target);
+		TweenData.UpdateCallback(NewValue);
 		return;
 	}
 	if (TweenData.UpdateType == EDueUpdateType::Property)

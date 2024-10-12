@@ -8,25 +8,21 @@ FActiveDUETweenHandle DUETween::DUEMove(const TWeakObjectPtr<UObject>& Target, c
 	if (AActor* TargetAsActor = Cast<AActor>(Target); TargetAsActor)
 	{
 		FVector StartingValue = TargetAsActor->GetActorLocation();
-		FTweenCallback TargetCallback = [](const FValueContainer& UpdatedValue,
-		                                   const TWeakObjectPtr<UObject>& TargetToUpdate)
+		FTweenUpdateCallback TargetCallback = [TargetAsActor](const FValueContainer& UpdatedValue)
 		{
-			AActor* TargetActor = Cast<AActor>(TargetToUpdate.Get());
-			TargetActor->SetActorLocation(UpdatedValue.GetSubtype<FVector>());
+			TargetAsActor->SetActorLocation(UpdatedValue.GetSubtype<FVector>());
 		};
 		return StartDUETween(Target, TargetCallback, StartingValue, TargetLocation, Duration,
 		                     Easing, Steps);
 	}
 
-	if (const USceneComponent* TargetAsSceneComponent = Cast<USceneComponent>(Target);
+	if (USceneComponent* TargetAsSceneComponent = Cast<USceneComponent>(Target);
 		TargetAsSceneComponent)
 	{
 		const FVector StartingValue = TargetAsSceneComponent->GetRelativeLocation();
-		FTweenCallback TargetCallback = [](const FValueContainer& UpdatedValue,
-		                                                         const TWeakObjectPtr<UObject>& TargetToUpdate)
+		FTweenUpdateCallback TargetCallback = [TargetAsSceneComponent](const FValueContainer& UpdatedValue)
 		{
-			USceneComponent* SceneComp = Cast<USceneComponent>(TargetToUpdate.Get());
-			SceneComp->SetRelativeLocation(UpdatedValue.GetSubtype<FVector>());
+			TargetAsSceneComponent->SetRelativeLocation(UpdatedValue.GetSubtype<FVector>());
 		};
 		return StartDUETween(Target, TargetCallback, StartingValue, TargetLocation, Duration,
 		                     Easing, Steps);
@@ -44,25 +40,21 @@ FActiveDUETweenHandle DUETween::DUERotate(const TWeakObjectPtr<UObject>& Target,
 	if (AActor* TargetAsActor = Cast<AActor>(Target); TargetAsActor)
 	{
 		FRotator StartingValue = TargetAsActor->GetActorRotation();
-		FTweenCallback TargetCallback = [](const FValueContainer& UpdatedValue,
-		                                   const TWeakObjectPtr<UObject>& TargetToUpdate)
+		FTweenUpdateCallback TargetCallback = [TargetAsActor](const FValueContainer& UpdatedValue)
 		{
-			AActor* TargetActor = Cast<AActor>(TargetToUpdate.Get());
-			TargetActor->SetActorRotation(UpdatedValue.GetSubtype<FRotator>());
+			TargetAsActor->SetActorRotation(UpdatedValue.GetSubtype<FRotator>());
 		};
 		return StartDUETween(Target, TargetCallback, StartingValue, TargetRotation, Duration,
 		                     Easing, Steps);
 	}
 
-	if (const USceneComponent* TargetAsSceneComponent = Cast<USceneComponent>(Target);
+	if (USceneComponent* TargetAsSceneComponent = Cast<USceneComponent>(Target);
 		TargetAsSceneComponent)
 	{
 		FRotator StartingValue = TargetAsSceneComponent->GetRelativeRotation();
-		FTweenCallback TargetCallback = [](const FValueContainer& UpdatedValue,
-		                                   const TWeakObjectPtr<UObject>& TargetToUpdate)
+		FTweenUpdateCallback TargetCallback = [TargetAsSceneComponent](const FValueContainer& UpdatedValue)
 		{
-			USceneComponent* SceneComp = Cast<USceneComponent>(TargetToUpdate.Get());
-			SceneComp->SetRelativeRotation(UpdatedValue.GetSubtype<FRotator>());
+			TargetAsSceneComponent->SetRelativeRotation(UpdatedValue.GetSubtype<FRotator>());
 		};
 		return StartDUETween(Target, TargetCallback, StartingValue, TargetRotation, Duration,
 		                     Easing, Steps);
@@ -80,11 +72,9 @@ FActiveDUETweenHandle DUETween::DUEMove2D(const TWeakObjectPtr<UObject>& Target,
 		TargetAsCanvasPanelSlot)
 	{
 		FVector2D StartingValue = TargetAsCanvasPanelSlot->GetPosition();
-		FTweenCallback TargetCallback = [](const FValueContainer& UpdatedValue,
-		                                   const TWeakObjectPtr<UObject>& TargetToUpdate)
+		FTweenUpdateCallback TargetCallback = [TargetAsCanvasPanelSlot](const FValueContainer& UpdatedValue)
 		{
-			UCanvasPanelSlot* CanvasPanelSlot = Cast<UCanvasPanelSlot>(TargetToUpdate.Get());
-			CanvasPanelSlot->SetPosition(UpdatedValue.GetSubtype<FVector2D>());
+			TargetAsCanvasPanelSlot->SetPosition(UpdatedValue.GetSubtype<FVector2D>());
 		};
 		return StartDUETween(Target, TargetCallback, StartingValue, TargetValue, Duration,
 		                     Easing, Steps);
