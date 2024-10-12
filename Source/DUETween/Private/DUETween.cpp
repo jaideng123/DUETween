@@ -3,7 +3,8 @@
 #include "Components/CanvasPanelSlot.h"
 
 FActiveDUETweenHandle DUETween::DUEMove(const TWeakObjectPtr<UObject>& Target, const FVector& TargetLocation,
-                                        const float& Duration, const EDueEasingType& Easing, const int32& Steps)
+                                        const float& Duration, const EDueEasingType& Easing, const int32& Steps,
+                                        const int32& LoopCount, const bool& YoYo)
 {
 	if (AActor* TargetAsActor = Cast<AActor>(Target); TargetAsActor)
 	{
@@ -13,7 +14,7 @@ FActiveDUETweenHandle DUETween::DUEMove(const TWeakObjectPtr<UObject>& Target, c
 			TargetAsActor->SetActorLocation(UpdatedValue.GetSubtype<FVector>());
 		};
 		return StartDUETween(Target, TargetCallback, StartingValue, TargetLocation, Duration,
-		                     Easing, Steps);
+		                     Easing, Steps, LoopCount, YoYo);
 	}
 
 	if (USceneComponent* TargetAsSceneComponent = Cast<USceneComponent>(Target);
@@ -25,7 +26,7 @@ FActiveDUETweenHandle DUETween::DUEMove(const TWeakObjectPtr<UObject>& Target, c
 			TargetAsSceneComponent->SetRelativeLocation(UpdatedValue.GetSubtype<FVector>());
 		};
 		return StartDUETween(Target, TargetCallback, StartingValue, TargetLocation, Duration,
-		                     Easing, Steps);
+		                     Easing, Steps, LoopCount, YoYo);
 	}
 
 	UE_LOG(LogDUETween, Error, TEXT("Unsupported type for due move: %s"),
@@ -35,7 +36,8 @@ FActiveDUETweenHandle DUETween::DUEMove(const TWeakObjectPtr<UObject>& Target, c
 }
 
 FActiveDUETweenHandle DUETween::DUERotate(const TWeakObjectPtr<UObject>& Target, const FRotator& TargetRotation,
-                                          const float& Duration, const EDueEasingType& Easing, const int32& Steps)
+                                          const float& Duration, const EDueEasingType& Easing, const int32& Steps,
+                                          const int32& LoopCount, const bool& YoYo)
 {
 	if (AActor* TargetAsActor = Cast<AActor>(Target); TargetAsActor)
 	{
@@ -45,7 +47,7 @@ FActiveDUETweenHandle DUETween::DUERotate(const TWeakObjectPtr<UObject>& Target,
 			TargetAsActor->SetActorRotation(UpdatedValue.GetSubtype<FRotator>());
 		};
 		return StartDUETween(Target, TargetCallback, StartingValue, TargetRotation, Duration,
-		                     Easing, Steps);
+		                     Easing, Steps, LoopCount, YoYo);
 	}
 
 	if (USceneComponent* TargetAsSceneComponent = Cast<USceneComponent>(Target);
@@ -57,7 +59,7 @@ FActiveDUETweenHandle DUETween::DUERotate(const TWeakObjectPtr<UObject>& Target,
 			TargetAsSceneComponent->SetRelativeRotation(UpdatedValue.GetSubtype<FRotator>());
 		};
 		return StartDUETween(Target, TargetCallback, StartingValue, TargetRotation, Duration,
-		                     Easing, Steps);
+		                     Easing, Steps, LoopCount, YoYo);
 	}
 
 	UE_LOG(LogDUETween, Error, TEXT("Unsupported type for due rotate: %s"),
@@ -66,7 +68,8 @@ FActiveDUETweenHandle DUETween::DUERotate(const TWeakObjectPtr<UObject>& Target,
 }
 
 FActiveDUETweenHandle DUETween::DUEMove2D(const TWeakObjectPtr<UObject>& Target, const FVector2D& TargetValue,
-                                          const float& Duration, const EDueEasingType& Easing, const int32& Steps)
+                                          const float& Duration, const EDueEasingType& Easing, const int32& Steps,
+                                          const int32& LoopCount, const bool& YoYo)
 {
 	if (UCanvasPanelSlot* TargetAsCanvasPanelSlot = Cast<UCanvasPanelSlot>(Target);
 		TargetAsCanvasPanelSlot)
@@ -77,7 +80,7 @@ FActiveDUETweenHandle DUETween::DUEMove2D(const TWeakObjectPtr<UObject>& Target,
 			TargetAsCanvasPanelSlot->SetPosition(UpdatedValue.GetSubtype<FVector2D>());
 		};
 		return StartDUETween(Target, TargetCallback, StartingValue, TargetValue, Duration,
-		                     Easing, Steps);
+		                     Easing, Steps, LoopCount, YoYo);
 	}
 
 	UE_LOG(LogDUETween, Error, TEXT("Unsupported type for due move 2d: %s"),

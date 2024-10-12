@@ -4,13 +4,17 @@
 #include "Kismet/KismetMathLibrary.h"
 
 double DUEEasingFunctionLibrary::Ease(const double& Begin, const double& End, const double& Alpha,
-                                      const EDueEasingType& Easing, const int32& Steps)
+                                      const EDueEasingType& Easing, const int32& Steps, const bool& YoYo)
 {
 	// Clamp Input Alpha In-case it exceeds 1 or is negative
 	double ClampedAlpha = FMath::Clamp(Alpha, 0.0, 1.0);
 	if (Steps > 0)
 	{
 		ClampedAlpha = FMath::InterpStep(0.0, 1.0, ClampedAlpha, Steps);
+	}
+	if(YoYo)
+	{
+		ClampedAlpha = ClampedAlpha <= 0.5 ? ClampedAlpha * 2.0 : (1 - ClampedAlpha) * 2.0;
 	}
 	double ResultAlpha = ClampedAlpha;
 

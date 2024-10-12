@@ -14,9 +14,11 @@ void UDUETweenBlueprintFunctionLibrary::DueMove(UObject* Target,
                                                 const FVector TargetLocation,
                                                 const EDueEasingType DueEasingType,
                                                 int& OutHandle,
-                                                const int32 Steps)
+                                                const int32 Steps,
+                                                const int32 LoopCount,
+                                                const bool YoYo)
 {
-	FActiveDUETweenHandle Handle = DUETween::DUEMove(Target, TargetLocation, Duration, DueEasingType, Steps);
+	FActiveDUETweenHandle Handle = DUETween::DUEMove(Target, TargetLocation, Duration, DueEasingType, Steps, LoopCount, YoYo);
 	OutHandle = CreateAndStartLatentAction(Target, LatentInfo, Handle);
 }
 
@@ -26,9 +28,11 @@ void UDUETweenBlueprintFunctionLibrary::DueMove2D(UObject* Target,
                                                   FVector2D TargetValue,
                                                   const EDueEasingType DueEasingType,
                                                   int& OutHandle,
-                                                  const int32 Steps)
+                                                  const int32 Steps,
+                                                  const int32 LoopCount,
+                                                  const bool YoYo)
 {
-	FActiveDUETweenHandle Handle = DUETween::DUEMove2D(Target, TargetValue, Duration, DueEasingType, Steps);
+	FActiveDUETweenHandle Handle = DUETween::DUEMove2D(Target, TargetValue, Duration, DueEasingType, Steps, LoopCount, YoYo);
 	OutHandle = CreateAndStartLatentAction(Target, LatentInfo, Handle);
 }
 
@@ -38,9 +42,11 @@ void UDUETweenBlueprintFunctionLibrary::DueRotate(UObject* Target,
                                                   const FRotator TargetRotation,
                                                   const EDueEasingType DueEasingType,
                                                   int& OutHandle,
-                                                  const int32 Steps)
+                                                  const int32 Steps,
+                                                  const int32 LoopCount,
+                                                  const bool YoYo)
 {
-	FActiveDUETweenHandle Handle = DUETween::DUERotate(Target, TargetRotation, Duration, DueEasingType, Steps);
+	FActiveDUETweenHandle Handle = DUETween::DUERotate(Target, TargetRotation, Duration, DueEasingType, Steps, LoopCount, YoYo);
 	OutHandle = CreateAndStartLatentAction(Target, LatentInfo, Handle);
 }
 
@@ -51,10 +57,12 @@ void UDUETweenBlueprintFunctionLibrary::DueFloatField(UObject* Target,
                                                       const float TargetValue,
                                                       const EDueEasingType DueEasingType,
                                                       int& OutHandle,
-                                                      const int32 Steps)
+                                                      const int32 Steps,
+                                                      const int32 LoopCount,
+                                                      const bool YoYo)
 {
 	const FActiveDUETweenHandle Handle = DUETween::StartDUETween(Target, FieldName, TargetValue, Duration,
-	                                                             DueEasingType, Steps);
+	                                                             DueEasingType, Steps, LoopCount, YoYo);
 	OutHandle = CreateAndStartLatentAction(Target, LatentInfo, Handle);
 }
 
@@ -65,10 +73,12 @@ void UDUETweenBlueprintFunctionLibrary::DueDoubleField(UObject* Target,
                                                        const double TargetValue,
                                                        const EDueEasingType DueEasingType,
                                                        int& OutHandle,
-                                                       const int32 Steps)
+                                                       const int32 Steps,
+                                                       const int32 LoopCount,
+                                                       const bool YoYo)
 {
 	const FActiveDUETweenHandle Handle = DUETween::StartDUETween(Target, FieldName, TargetValue, Duration,
-	                                                             DueEasingType, Steps);
+	                                                             DueEasingType, Steps, LoopCount, YoYo);
 	OutHandle = CreateAndStartLatentAction(Target, LatentInfo, Handle);
 }
 
@@ -79,10 +89,12 @@ void UDUETweenBlueprintFunctionLibrary::DueVectorField(UObject* Target,
                                                        const FVector TargetValue,
                                                        const EDueEasingType DueEasingType,
                                                        int& OutHandle,
-                                                       const int32 Steps)
+                                                       const int32 Steps,
+                                                       const int32 LoopCount,
+                                                       const bool YoYo)
 {
 	const FActiveDUETweenHandle Handle = DUETween::StartDUETween(Target, FieldName, TargetValue, Duration,
-	                                                             DueEasingType, Steps);
+	                                                             DueEasingType, Steps, LoopCount, YoYo);
 	OutHandle = CreateAndStartLatentAction(Target, LatentInfo, Handle);
 }
 
@@ -93,10 +105,12 @@ void UDUETweenBlueprintFunctionLibrary::DueRotatorField(UObject* Target,
                                                         const FRotator TargetValue,
                                                         const EDueEasingType DueEasingType,
                                                         int& OutHandle,
-                                                        const int32 Steps)
+                                                        const int32 Steps,
+                                                        const int32 LoopCount,
+                                                        const bool YoYo)
 {
 	const FActiveDUETweenHandle Handle = DUETween::StartDUETween(Target, FieldName, TargetValue, Duration,
-	                                                             DueEasingType, Steps);
+	                                                             DueEasingType, Steps, LoopCount, YoYo);
 	OutHandle = CreateAndStartLatentAction(Target, LatentInfo, Handle);
 }
 
@@ -106,10 +120,12 @@ void UDUETweenBlueprintFunctionLibrary::DueVector2DField(UObject* Target,
                                                          FVector2D TargetValue,
                                                          EDueEasingType DueEasingType,
                                                          int& OutHandle,
-                                                         int32 Steps)
+                                                         int32 Steps,
+                                                         const int32 LoopCount,
+                                                         const bool YoYo)
 {
 	const FActiveDUETweenHandle Handle = DUETween::StartDUETween(Target, FieldName, TargetValue, Duration,
-	                                                             DueEasingType, Steps);
+	                                                             DueEasingType, Steps, LoopCount, YoYo);
 	OutHandle = CreateAndStartLatentAction(Target, LatentInfo, Handle);
 }
 

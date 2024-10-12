@@ -28,7 +28,9 @@ public:
 	                    FVector TargetLocation,
 	                    EDueEasingType DueEasingType,
 	                    int& OutHandle,
-	                    int32 Steps = 0);
+	                    int32 Steps = 0,
+	                    int32 LoopCount = 0,
+	                    const bool YoYo = false);
 
 	// Run a tween that will change a vector2d property from it's current value to the target value
 	UFUNCTION(BlueprintCallable, Category = "DUETween",
@@ -39,7 +41,9 @@ public:
 							   FVector2D TargetValue,
 							   EDueEasingType DueEasingType,
 							   int& OutHandle,
-							   int32 Steps = 0);
+							   int32 Steps = 0,
+							   int32 LoopCount = 0,
+							   const bool YoYo = false);
 
 	// Run a tween to rotate an actor/component from it's current rotation to a target rotation
 	UFUNCTION(BlueprintCallable, Category = "DUETween",
@@ -50,7 +54,9 @@ public:
 	                      FRotator TargetRotation,
 	                      EDueEasingType DueEasingType,
 	                      int& OutHandle,
-	                      int32 Steps = 0);
+	                      int32 Steps = 0,
+	                      int32 LoopCount = 0,
+	                      const bool YoYo = false);
 
 	// Run a tween that will change a float property from it's current value to the target value
 	UFUNCTION(BlueprintCallable, Category = "DUETween",
@@ -62,7 +68,9 @@ public:
 	                          float TargetValue,
 	                          EDueEasingType DueEasingType,
 	                          int& OutHandle,
-	                          int32 Steps = 0);
+	                          int32 Steps = 0,
+	                          int32 LoopCount = 0,
+	                          const bool YoYo = false);
 
 	// Run a tween that will change a double property from it's current value to the target value
 	UFUNCTION(BlueprintCallable, Category = "DUETween",
@@ -74,7 +82,9 @@ public:
 	                           double TargetValue,
 	                           EDueEasingType DueEasingType,
 	                           int& OutHandle,
-	                           int32 Steps = 0);
+	                           int32 Steps = 0,
+	                           int32 LoopCount = 0,
+	                           const bool YoYo = false);
 
 	// Run a tween that will change a vector property from it's current value to the target value
 	UFUNCTION(BlueprintCallable, Category = "DUETween",
@@ -86,7 +96,9 @@ public:
 	                           FVector TargetValue,
 	                           EDueEasingType DueEasingType,
 	                           int& OutHandle,
-	                           int32 Steps = 0);
+	                           int32 Steps = 0,
+	                           int32 LoopCount = 0,
+	                           const bool YoYo = false);
 
 	// Run a tween that will change a rotator property from it's current value to the target value
 	UFUNCTION(BlueprintCallable, Category = "DUETween",
@@ -98,7 +110,9 @@ public:
 	                            FRotator TargetValue,
 	                            EDueEasingType DueEasingType,
 	                            int& OutHandle,
-	                            int32 Steps = 0);
+	                            int32 Steps = 0,
+	                            int32 LoopCount = 0,
+	                            const bool YoYo = false);
 	
 	// Run a tween that will change a vector2d property from it's current value to the target value
 	UFUNCTION(BlueprintCallable, Category = "DUETween",
@@ -110,7 +124,9 @@ public:
 							   FVector2D TargetValue,
 							   EDueEasingType DueEasingType,
 							   int& OutHandle,
-							   int32 Steps = 0);
+							   int32 Steps = 0,
+							   int32 LoopCount = 0,
+							   const bool YoYo = false);
 
 	// Pause an actively running tween
 	UFUNCTION(BlueprintCallable, Category = "DUETween", meta = (DefaultToSelf="Target"))

@@ -234,7 +234,8 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 					                                                      float>(),
 				                                                      TweenProgress,
 				                                                      CurrentTween->TweenData.EasingType,
-				                                                      CurrentTween->TweenData.Steps);
+				                                                      CurrentTween->TweenData.Steps,
+				                                                      CurrentTween->TweenData.ShouldYoYo);
 				UE_LOG(LogDUETween, Verbose, TEXT("Updating Float Value:: %f"), NewValue);
 				UpdatedValue.SetSubtype<float>(NewValue);
 				break;
@@ -246,7 +247,8 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 					                                                       double>(),
 				                                                       TweenProgress,
 				                                                       CurrentTween->TweenData.EasingType,
-				                                                       CurrentTween->TweenData.Steps);
+				                                                       CurrentTween->TweenData.Steps,
+				                                                       CurrentTween->TweenData.ShouldYoYo);
 				UE_LOG(LogDUETween, Verbose, TEXT("Updating Double Value:: %f"), NewValue);
 				UpdatedValue.SetSubtype<double>(NewValue);
 				break;
@@ -257,7 +259,8 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 				                                                    1.0,
 				                                                    TweenProgress,
 				                                                    CurrentTween->TweenData.EasingType,
-				                                                    CurrentTween->TweenData.Steps);
+				                                                    CurrentTween->TweenData.Steps,
+				                                                    CurrentTween->TweenData.ShouldYoYo);
 				const FVector NewValue = FMath::Lerp(CurrentTween->StartingValue.GetSubtype<FVector>(),
 				                                     CurrentTween->TweenData.TargetValue.GetSubtype<FVector>(), Alpha);
 				UE_LOG(LogDUETween, Verbose, TEXT("Updating Vector Value: %s"), *NewValue.ToString());
@@ -270,7 +273,8 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 				                                                    1.0,
 				                                                    TweenProgress,
 				                                                    CurrentTween->TweenData.EasingType,
-				                                                    CurrentTween->TweenData.Steps);
+				                                                    CurrentTween->TweenData.Steps,
+				                                                    CurrentTween->TweenData.ShouldYoYo);
 				const FRotator NewValue = FRotator(
 					FQuat::Slerp(
 						CurrentTween->StartingValue.GetSubtype<FRotator>().Quaternion(),
@@ -288,7 +292,8 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 				                                                    1.0,
 				                                                    TweenProgress,
 				                                                    CurrentTween->TweenData.EasingType,
-				                                                    CurrentTween->TweenData.Steps);
+				                                                    CurrentTween->TweenData.Steps,
+				                                                    CurrentTween->TweenData.ShouldYoYo);
 				const FVector2D NewValue = FMath::Lerp(CurrentTween->StartingValue.GetSubtype<FVector2D>(),
 				                                       CurrentTween->TweenData.TargetValue.GetSubtype<FVector2D>(),
 				                                       Alpha);
@@ -304,7 +309,18 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 
 		if (TweenProgress >= 1.0)
 		{
-			CurrentTween->Status = EDUETweenStatus::Completed;
+			if (CurrentTween->TweenData.LoopCount != 0)
+			{
+				CurrentTween->TimeElapsed = 0;
+				if (CurrentTween->TweenData.LoopCount > 0)
+				{
+					CurrentTween->TweenData.LoopCount -= 1;
+				}
+			}
+			else
+			{
+				CurrentTween->Status = EDUETweenStatus::Completed;
+			}
 		}
 	}
 	else if (CurrentTween->Status == EDUETweenStatus::Paused)
@@ -313,6 +329,10 @@ void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTwee
 	}
 	else if (CurrentTween->Status == EDUETweenStatus::Completed)
 	{
+		if(CurrentTween->TweenData.CompletionCallback)
+		{
+			CurrentTween->TweenData.CompletionCallback();
+		}
 		RemoveTweenFromActiveChain(CurrentTween->Handle);
 		Pool.ReturnTweenToPool(CurrentTween->Handle);
 	}
@@ -337,7 +357,7 @@ void UDUETweenSubsystem::ValidateTweenData(const FDUETweenData& TweenData)
 		          TweenData.Target.Get()->GetName());
 	}
 	// Currently we only check for other properties
-	if(TweenData.TargetProperty != nullptr)
+	if (TweenData.TargetProperty != nullptr)
 	{
 		FActiveDUETweenHandle CurrentTweenHandle = ActiveTweenChainStart;
 		while (CurrentTweenHandle != NULL_DUETWEEN_HANDLE)
@@ -349,7 +369,7 @@ void UDUETweenSubsystem::ValidateTweenData(const FDUETweenData& TweenData)
 				CurrentTween->TweenData.Target.HasSameIndexAndSerialNumber(TweenData.Target.Get()))
 			{
 				UE_LOGFMT(LogDUETween, Error, "Creating Tween on {0} that is already actively tweening property {1}",
-						  TweenData.Target.Get()->GetName(), TweenData.TargetProperty->GetName());
+				          TweenData.Target.Get()->GetName(), TweenData.TargetProperty->GetName());
 			}
 
 			CurrentTweenHandle = CurrentTween->TweenPtr.NextFreeTween;

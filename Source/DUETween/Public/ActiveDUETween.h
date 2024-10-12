@@ -9,6 +9,7 @@ constexpr FActiveDUETweenHandle NULL_DUETWEEN_HANDLE = -1;
 
 using FValueContainer = TUnion<FVector, FVector2D, FRotator, float, double>;
 using FTweenUpdateCallback = TUniqueFunction<void(const FValueContainer&)>;
+using FTweenCompleteCallback = TUniqueFunction<void()>;
 
 /**
  * Status of a tween
@@ -126,10 +127,10 @@ enum class EDueUpdateType
 struct FDUETweenData
 {
 	FTweenUpdateCallback UpdateCallback;
-	FTweenUpdateCallback CompletionCallback;
+	FTweenCompleteCallback CompletionCallback;
 	FProperty* TargetProperty;
 	EDueUpdateType UpdateType = EDueUpdateType::Unset;
-	
+
 	EDueValueType ValueType = EDueValueType::Float;
 
 	FValueContainer TargetValue;
@@ -146,10 +147,12 @@ struct FDUETweenData
 	{
 		TargetProperty = nullptr;
 		UpdateCallback = nullptr;
+		CompletionCallback = nullptr;
 	}
 
 	FDUETweenData(FDUETweenData&& Other) noexcept
 		: UpdateCallback(std::move(Other.UpdateCallback)),
+	CompletionCallback(std::move(Other.CompletionCallback)),
 		  TargetProperty(Other.TargetProperty),
 		  UpdateType(Other.UpdateType),
 		  ValueType(Other.ValueType),
@@ -158,7 +161,10 @@ struct FDUETweenData
 		  Target(std::move(Other.Target)),
 		  Duration(Other.Duration),
 		  EasingType(Other.EasingType),
-		  Steps(Other.Steps)
+		  Steps(Other.Steps),
+		  LoopCount(Other.LoopCount),
+		  ShouldYoYo(Other.ShouldYoYo)
+	
 	{
 	}
 
@@ -168,6 +174,7 @@ struct FDUETweenData
 		if (this == &Other)
 			return *this;
 		UpdateCallback = std::move(Other.UpdateCallback);
+		CompletionCallback = std::move(Other.CompletionCallback);
 		Other.UpdateCallback = nullptr;
 		TargetProperty = Other.TargetProperty;
 		UpdateType = Other.UpdateType;
@@ -178,6 +185,8 @@ struct FDUETweenData
 		Duration = Other.Duration;
 		EasingType = Other.EasingType;
 		Steps = Other.Steps;
+		LoopCount = Other.LoopCount;
+		ShouldYoYo = Other.ShouldYoYo;
 		return *this;
 	}
 };

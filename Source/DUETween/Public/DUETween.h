@@ -12,7 +12,9 @@ public:
 	                                           const T& TargetValue,
 	                                           const float& Duration,
 	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin,
-	                                           const int32& Steps = 0)
+	                                           const int32& Steps = 0,
+	                                           const int32& LoopCount = 0,
+	                                           const bool& YoYo = false)
 	{
 		static_assert(GetDueValueTypeConst<T>() == EDueValueType::Unset, "Unsupported Type");
 
@@ -38,7 +40,9 @@ public:
 	                                           const T& TargetValue,
 	                                           const float& Duration,
 	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin,
-	                                           const int32& Steps = 0)
+	                                           const int32& Steps = 0,
+	                                           const int32& LoopCount = 0,
+	                                           const bool& YoYo = false)
 	{
 		static_assert(GetDueValueTypeConst<T>() == EDueValueType::Unset, "Unsupported Type");
 
@@ -48,7 +52,7 @@ public:
 			UE_LOG(LogDUETween, Error, TEXT("No Property Found For:%s"), *PropertyName.ToString());
 			return NULL_DUETWEEN_HANDLE;
 		}
-		return StartDUETween(Target, PropertyRef, TargetValue, Duration, Easing, Steps);
+		return StartDUETween(Target, PropertyRef, TargetValue, Duration, Easing, Steps, LoopCount, YoYo);
 	}
 
 	// Start Tween with callback update function
@@ -59,7 +63,9 @@ public:
 	                                           const T& TargetValue,
 	                                           const float& Duration,
 	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin,
-	                                           const int32& Steps = 0)
+	                                           const int32& Steps = 0,
+	                                           const int32& LoopCount = 0,
+	                                           const bool& YoYo = false)
 	{
 		static_assert(GetDueValueTypeConst<T>() == EDueValueType::Unset, "Unsupported Type");
 
@@ -76,6 +82,8 @@ public:
 		TweenData.TargetValue.SetSubtype<T>(TargetValue);
 		constexpr EDueValueType ValueType = GetDueValueType<T>();
 		TweenData.ValueType = ValueType;
+		TweenData.LoopCount = LoopCount;
+		TweenData.ShouldYoYo = YoYo;
 
 		const UWorld* World = Target.Get()->GetWorld();
 		return World->GetSubsystem<UDUETweenSubsystem>()->AddTween(TweenData);
@@ -85,19 +93,25 @@ public:
 										   const FVector& TargetValue,
 										   const float& Duration,
 										   const EDueEasingType& Easing = EDueEasingType::InOutSin,
-										   const int32& Steps = 0);
+										   const int32& Steps = 0,
+										   const int32& LoopCount = 0,
+										   const bool& YoYo = false);
 
 	static FActiveDUETweenHandle DUERotate(const TWeakObjectPtr<UObject>& Target,
 									   const FRotator& TargetValue,
 									   const float& Duration,
 									   const EDueEasingType& Easing = EDueEasingType::InOutSin,
-									   const int32& Steps = 0);
+									   const int32& Steps = 0,
+									   const int32& LoopCount = 0,
+									   const bool& YoYo = false);
 
 	static FActiveDUETweenHandle DUEMove2D(const TWeakObjectPtr<UObject>& Target,
 								   const FVector2D& TargetValue,
 								   const float& Duration,
 								   const EDueEasingType& Easing = EDueEasingType::InOutSin,
-								   const int32& Steps = 0);
+								   const int32& Steps = 0,
+								   const int32& LoopCount = 0,
+								   const bool& YoYo = false);
 
 	// Pauses a currently running tween (returns true if successful)
 	static bool PauseDUETween(const TWeakObjectPtr<UObject>& Target, const FActiveDUETweenHandle& DUETweenHandle);
