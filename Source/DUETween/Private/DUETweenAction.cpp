@@ -2,7 +2,7 @@
 
 void FDUETweenAction::UpdateOperation(FLatentResponse& Response)
 {
-	if (ActiveDUETween == NULL_DUETWEEN_HANDLE)
+	if (ActiveDUETween == nullptr)
 	{
 		Response.FinishAndTriggerIf(true, ExecutionFunction, OutputLink, CallbackTarget);
 		return;

@@ -12,7 +12,7 @@ void UDUETweenSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 	Pool.InitTweenPool();
-	ActiveTweenChainStart = NULL_DUETWEEN_HANDLE;
+	ActiveTweenChainStart = FActiveDUETweenHandle::NULL_HANDLE();
 	LastAssignedTweenId = 0;
 }
 
@@ -35,18 +35,18 @@ FActiveDUETweenHandle UDUETweenSubsystem::AddTween(FDUETweenData& TweenData)
 	ValidateTweenData(TweenData);
 	if (NewTweenObject == nullptr)
 	{
-		return NULL_DUETWEEN_HANDLE;
+		return FActiveDUETweenHandle::NULL_HANDLE();
 	}
 	{
 		DECLARE_CYCLE_STAT(TEXT("AddTween_AddToChain"), STAT_AddTween_AddToChain, STATGROUP_DUETween);
 		SCOPE_CYCLE_COUNTER(STAT_AddTween_AddToChain);
 		// Add to tween chain
 		NewTweenObject->TweenPtr.ActiveNode.NextActiveTween = ActiveTweenChainStart;
-		if (ActiveTweenChainStart != NULL_DUETWEEN_HANDLE)
+		if (ActiveTweenChainStart != nullptr)
 		{
 			GetTweenFromHandle(ActiveTweenChainStart)->TweenPtr.ActiveNode.LastActiveTween = NewTweenObject->Handle;
 		}
-		NewTweenObject->TweenPtr.ActiveNode.LastActiveTween = NULL_DUETWEEN_HANDLE;
+		NewTweenObject->TweenPtr.ActiveNode.LastActiveTween = FActiveDUETweenHandle::NULL_HANDLE();
 		ActiveTweenChainStart = NewTweenObject->Handle;
 	}
 	{
@@ -138,7 +138,7 @@ void UDUETweenSubsystem::StopAllTweens(TWeakObjectPtr<UObject> Object) const
 		return;
 	}
 	FActiveDUETweenHandle CurrentTweenHandle = ActiveTweenChainStart;
-	while (CurrentTweenHandle != NULL_DUETWEEN_HANDLE)
+	while (CurrentTweenHandle != nullptr)
 	{
 		FActiveDUETween* CurrentTween = GetTweenFromHandle(CurrentTweenHandle);
 
@@ -154,7 +154,7 @@ void UDUETweenSubsystem::StopAllTweens(TWeakObjectPtr<UObject> Object) const
 
 FActiveDUETween* UDUETweenSubsystem::GetTweenFromHandle(const FActiveDUETweenHandle& TweenHandle) const
 {
-	return Pool.GetTweenFromHandle(TweenHandle);
+	return Pool.GetTweenFromHandle(TweenHandle, true);
 }
 
 void UDUETweenSubsystem::Tick(float DeltaTime)
@@ -162,7 +162,7 @@ void UDUETweenSubsystem::Tick(float DeltaTime)
 	DECLARE_CYCLE_STAT(TEXT("TickAllTweens"), STAT_TickAllTweens, STATGROUP_DUETween);
 	SCOPE_CYCLE_COUNTER(STAT_TickAllTweens);
 	FActiveDUETweenHandle CurrentTweenHandle = ActiveTweenChainStart;
-	while (CurrentTweenHandle != NULL_DUETWEEN_HANDLE)
+	while (CurrentTweenHandle != nullptr)
 	{
 		FActiveDUETween* CurrentTween = GetTweenFromHandle(CurrentTweenHandle);
 
@@ -177,7 +177,7 @@ void UDUETweenSubsystem::Tick(float DeltaTime)
 
 bool UDUETweenSubsystem::IsTickable() const
 {
-	return ActiveTweenChainStart != NULL_DUETWEEN_HANDLE;
+	return ActiveTweenChainStart != nullptr;
 }
 
 void UDUETweenSubsystem::TickTween(float DeltaTime, FActiveDUETween* CurrentTween)
@@ -360,7 +360,7 @@ void UDUETweenSubsystem::ValidateTweenData(const FDUETweenData& TweenData)
 	if (TweenData.TargetProperty != nullptr)
 	{
 		FActiveDUETweenHandle CurrentTweenHandle = ActiveTweenChainStart;
-		while (CurrentTweenHandle != NULL_DUETWEEN_HANDLE)
+		while (CurrentTweenHandle != nullptr)
 		{
 			FActiveDUETween* CurrentTween = GetTweenFromHandle(CurrentTweenHandle);
 			if (CurrentTween->TweenData.Target != nullptr &&
@@ -380,7 +380,11 @@ void UDUETweenSubsystem::ValidateTweenData(const FDUETweenData& TweenData)
 
 void UDUETweenSubsystem::RemoveTweenFromActiveChain(FActiveDUETweenHandle TweenHandleToRemove)
 {
-	const FActiveDUETween* TweenToRemove = Pool.GetTweenFromHandle(TweenHandleToRemove);
+	const FActiveDUETween* TweenToRemove = Pool.GetTweenFromHandle(TweenHandleToRemove, true);
+	if(TweenToRemove == nullptr)
+	{
+		return;
+	}
 	// First remove from the active tween chain
 	{
 		DECLARE_CYCLE_STAT(TEXT("ReturnTweenToPool_RemoveFromChain"), STAT_ReturnTweenToPool_RemoveFromChain,
@@ -388,12 +392,12 @@ void UDUETweenSubsystem::RemoveTweenFromActiveChain(FActiveDUETweenHandle TweenH
 		SCOPE_CYCLE_COUNTER(STAT_ReturnTweenToPool_RemoveFromChain);
 		if (TweenToRemove->Handle == ActiveTweenChainStart)
 		{
-			ActiveTweenChainStart = Pool.GetTweenFromHandle(ActiveTweenChainStart)->TweenPtr.ActiveNode.NextActiveTween;
+			ActiveTweenChainStart = Pool.GetTweenFromHandle(ActiveTweenChainStart, true)->TweenPtr.ActiveNode.NextActiveTween;
 		}
 		else
 		{
-			FActiveDUETween* PreviousNode = Pool.GetTweenFromHandle(TweenToRemove->TweenPtr.ActiveNode.LastActiveTween);
-			FActiveDUETween* NextNode = Pool.GetTweenFromHandle(TweenToRemove->TweenPtr.ActiveNode.NextActiveTween);
+			FActiveDUETween* PreviousNode = Pool.GetTweenFromHandle(TweenToRemove->TweenPtr.ActiveNode.LastActiveTween, true);
+			FActiveDUETween* NextNode = Pool.GetTweenFromHandle(TweenToRemove->TweenPtr.ActiveNode.NextActiveTween, true);
 			if (PreviousNode != nullptr)
 			{
 				PreviousNode->TweenPtr.ActiveNode.NextActiveTween = TweenToRemove->TweenPtr.ActiveNode.NextActiveTween;

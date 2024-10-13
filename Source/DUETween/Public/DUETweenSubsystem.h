@@ -48,6 +48,6 @@ private:
 	void ValidateTweenData(const FDUETweenData& TweenData);
 	FDUETweenPool Pool = FDUETweenPool();
 	void RemoveTweenFromActiveChain(FActiveDUETweenHandle TweenHandleToRemove);
-	FActiveDUETweenHandle ActiveTweenChainStart = NULL_DUETWEEN_HANDLE;
+	FActiveDUETweenHandle ActiveTweenChainStart = FActiveDUETweenHandle::NULL_HANDLE();
 	unsigned int LastAssignedTweenId = 0;
 };

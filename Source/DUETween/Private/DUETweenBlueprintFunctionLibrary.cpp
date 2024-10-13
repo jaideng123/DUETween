@@ -13,7 +13,7 @@ void UDUETweenBlueprintFunctionLibrary::DueMove(UObject* Target,
                                                 const float Duration,
                                                 const FVector TargetLocation,
                                                 const EDueEasingType DueEasingType,
-                                                int& OutHandle,
+                                                FActiveDUETweenHandle& OutHandle,
                                                 const int32 Steps,
                                                 const int32 LoopCount,
                                                 const bool YoYo)
@@ -27,7 +27,7 @@ void UDUETweenBlueprintFunctionLibrary::DueMove2D(UObject* Target,
                                                   const float Duration,
                                                   FVector2D TargetValue,
                                                   const EDueEasingType DueEasingType,
-                                                  int& OutHandle,
+                                                  FActiveDUETweenHandle& OutHandle,
                                                   const int32 Steps,
                                                   const int32 LoopCount,
                                                   const bool YoYo)
@@ -41,7 +41,7 @@ void UDUETweenBlueprintFunctionLibrary::DueRotate(UObject* Target,
                                                   const float Duration,
                                                   const FRotator TargetRotation,
                                                   const EDueEasingType DueEasingType,
-                                                  int& OutHandle,
+                                                  FActiveDUETweenHandle& OutHandle,
                                                   const int32 Steps,
                                                   const int32 LoopCount,
                                                   const bool YoYo)
@@ -56,7 +56,7 @@ void UDUETweenBlueprintFunctionLibrary::DueFloatField(UObject* Target,
                                                       const float Duration,
                                                       const float TargetValue,
                                                       const EDueEasingType DueEasingType,
-                                                      int& OutHandle,
+                                                      FActiveDUETweenHandle& OutHandle,
                                                       const int32 Steps,
                                                       const int32 LoopCount,
                                                       const bool YoYo)
@@ -72,7 +72,7 @@ void UDUETweenBlueprintFunctionLibrary::DueDoubleField(UObject* Target,
                                                        const float Duration,
                                                        const double TargetValue,
                                                        const EDueEasingType DueEasingType,
-                                                       int& OutHandle,
+                                                       FActiveDUETweenHandle& OutHandle,
                                                        const int32 Steps,
                                                        const int32 LoopCount,
                                                        const bool YoYo)
@@ -88,7 +88,7 @@ void UDUETweenBlueprintFunctionLibrary::DueVectorField(UObject* Target,
                                                        const float Duration,
                                                        const FVector TargetValue,
                                                        const EDueEasingType DueEasingType,
-                                                       int& OutHandle,
+                                                       FActiveDUETweenHandle& OutHandle,
                                                        const int32 Steps,
                                                        const int32 LoopCount,
                                                        const bool YoYo)
@@ -104,7 +104,7 @@ void UDUETweenBlueprintFunctionLibrary::DueRotatorField(UObject* Target,
                                                         const float Duration,
                                                         const FRotator TargetValue,
                                                         const EDueEasingType DueEasingType,
-                                                        int& OutHandle,
+                                                        FActiveDUETweenHandle& OutHandle,
                                                         const int32 Steps,
                                                         const int32 LoopCount,
                                                         const bool YoYo)
@@ -119,7 +119,7 @@ void UDUETweenBlueprintFunctionLibrary::DueVector2DField(UObject* Target,
                                                          float Duration,
                                                          FVector2D TargetValue,
                                                          EDueEasingType DueEasingType,
-                                                         int& OutHandle,
+                                                         FActiveDUETweenHandle& OutHandle,
                                                          int32 Steps,
                                                          const int32 LoopCount,
                                                          const bool YoYo)
@@ -129,24 +129,29 @@ void UDUETweenBlueprintFunctionLibrary::DueVector2DField(UObject* Target,
 	OutHandle = CreateAndStartLatentAction(Target, LatentInfo, Handle);
 }
 
-void UDUETweenBlueprintFunctionLibrary::PauseDUETween(UObject* Target, const int& DUETweenHandle, bool& Success)
+void UDUETweenBlueprintFunctionLibrary::PauseDUETween(UObject* Target, const FActiveDUETweenHandle DUETweenHandle, bool& Success)
 {
 	Success = DUETween::PauseDUETween(Target, DUETweenHandle);
 }
 
-void UDUETweenBlueprintFunctionLibrary::ResumeDUETween(UObject* Target, const int& DUETweenHandle, bool& Success)
+void UDUETweenBlueprintFunctionLibrary::ResumeDUETween(UObject* Target, const FActiveDUETweenHandle DUETweenHandle, bool& Success)
 {
 	Success = DUETween::ResumeDUETween(Target, DUETweenHandle);
 }
 
-void UDUETweenBlueprintFunctionLibrary::FastForwardDUETween(UObject* Target, const int& DUETweenHandle, bool& Success)
+void UDUETweenBlueprintFunctionLibrary::FastForwardDUETween(UObject* Target, const FActiveDUETweenHandle DUETweenHandle, bool& Success)
 {
 	Success = DUETween::FastForwardDUETween(Target, DUETweenHandle);
 }
 
-void UDUETweenBlueprintFunctionLibrary::StopDUETween(UObject* Target, const int& DUETweenHandle, bool& Success)
+void UDUETweenBlueprintFunctionLibrary::StopDUETween(UObject* Target, const FActiveDUETweenHandle DUETweenHandle, bool& Success)
 {
 	Success = DUETween::StopDUETween(Target, DUETweenHandle);
+}
+
+bool UDUETweenBlueprintFunctionLibrary::IsDUETweenHandleNull(FActiveDUETweenHandle Handle)
+{
+	return Handle == nullptr;
 }
 
 
@@ -154,10 +159,10 @@ FActiveDUETweenHandle UDUETweenBlueprintFunctionLibrary::CreateAndStartLatentAct
 	UObject* Target, const FLatentActionInfo& LatentInfo,
 	const FActiveDUETweenHandle& TweenHandle)
 {
-	if (TweenHandle == NULL_DUETWEEN_HANDLE)
+	if (TweenHandle == nullptr)
 	{
 		UE_LOG(LogDUETween, Warning, TEXT("Unable to start due tween with UUID: %d"), LatentInfo.UUID);
-		return NULL_DUETWEEN_HANDLE;
+		return FActiveDUETweenHandle::NULL_HANDLE();
 	}
 
 	if (UWorld* World = GEngine->GetWorldFromContextObject(Target, EGetWorldErrorMode::ReturnNull))
@@ -174,5 +179,5 @@ FActiveDUETweenHandle UDUETweenBlueprintFunctionLibrary::CreateAndStartLatentAct
 	}
 	UE_LOG(LogDUETween, Warning, TEXT("Unable to start due tween latent action with UUID: %d"), LatentInfo.UUID);
 	DUETween::StopDUETween(Target, TweenHandle);
-	return NULL_DUETWEEN_HANDLE;
+	return FActiveDUETweenHandle::NULL_HANDLE();
 }

@@ -3,9 +3,66 @@
 
 #include "DUEEasingFunctionLibrary.h"
 #include "Containers/Union.h"
+#include "ActiveDUETween.generated.h"
 
-typedef int FActiveDUETweenHandle;
-constexpr FActiveDUETweenHandle NULL_DUETWEEN_HANDLE = -1;
+USTRUCT(BlueprintType)
+struct FActiveDUETweenHandle
+{
+	GENERATED_BODY()
+
+	int HandleIndex;
+	int Version;
+	UWorld* BoundWorld;
+
+	FActiveDUETweenHandle()
+	{
+		HandleIndex = -1;
+		Version = -1;
+		BoundWorld = nullptr;
+	}
+	
+	static FActiveDUETweenHandle NULL_HANDLE()
+	{
+		return FActiveDUETweenHandle();
+	}
+
+	FActiveDUETweenHandle(int HandleIndex, UWorld* BoundWorld, int Version)
+		: HandleIndex(HandleIndex),
+		  Version(Version),
+		  BoundWorld(BoundWorld)
+	{
+	}
+
+
+	/**
+	 * Nullptr inequality operator.
+	 */
+	FORCEINLINE bool operator==(TYPE_OF_NULLPTR) const
+	{
+		return HandleIndex < 0;
+	}
+
+	/**
+	 * Nullptr inequality operator.
+	 */
+	FORCEINLINE bool operator!=(TYPE_OF_NULLPTR) const
+	{
+		return HandleIndex >= 0;
+	}
+
+
+	friend bool operator==(const FActiveDUETweenHandle& Lhs, const FActiveDUETweenHandle& RHS)
+	{
+		return Lhs.HandleIndex == RHS.HandleIndex
+			&& Lhs.Version == RHS.Version
+			&& Lhs.BoundWorld == RHS.BoundWorld;
+	}
+
+	friend bool operator!=(const FActiveDUETweenHandle& Lhs, const FActiveDUETweenHandle& RHS)
+	{
+		return !(Lhs == RHS);
+	}
+};
 
 using FValueContainer = TUnion<FVector, FVector2D, FRotator, float, double>;
 using FTweenUpdateCallback = TUniqueFunction<void(const FValueContainer&)>;
@@ -152,7 +209,7 @@ struct FDUETweenData
 
 	FDUETweenData(FDUETweenData&& Other) noexcept
 		: UpdateCallback(std::move(Other.UpdateCallback)),
-	CompletionCallback(std::move(Other.CompletionCallback)),
+		  CompletionCallback(std::move(Other.CompletionCallback)),
 		  TargetProperty(Other.TargetProperty),
 		  UpdateType(Other.UpdateType),
 		  ValueType(Other.ValueType),
@@ -164,7 +221,7 @@ struct FDUETweenData
 		  Steps(Other.Steps),
 		  LoopCount(Other.LoopCount),
 		  ShouldYoYo(Other.ShouldYoYo)
-	
+
 	{
 	}
 
@@ -217,6 +274,7 @@ struct FActiveDUETween
 	unsigned int ID = 0;
 	float TimeElapsed = 0;
 	EDUETweenStatus Status = EDUETweenStatus::Unset;
-	FValueContainer StartingValue;
 	bool IsReversing = false;
+
+	FValueContainer StartingValue;
 };

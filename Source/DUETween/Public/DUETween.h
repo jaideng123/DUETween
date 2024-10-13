@@ -50,7 +50,7 @@ public:
 		if (PropertyRef == nullptr)
 		{
 			UE_LOG(LogDUETween, Error, TEXT("No Property Found For:%s"), *PropertyName.ToString());
-			return NULL_DUETWEEN_HANDLE;
+			return FActiveDUETweenHandle::NULL_HANDLE();
 		}
 		return StartDUETween(Target, PropertyRef, TargetValue, Duration, Easing, Steps, LoopCount, YoYo);
 	}

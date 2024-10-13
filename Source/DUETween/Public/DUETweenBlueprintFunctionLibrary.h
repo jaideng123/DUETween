@@ -27,7 +27,7 @@ public:
 	                    float Duration,
 	                    FVector TargetLocation,
 	                    EDueEasingType DueEasingType,
-	                    int& OutHandle,
+	                    FActiveDUETweenHandle& OutHandle,
 	                    int32 Steps = 0,
 	                    int32 LoopCount = 0,
 	                    const bool YoYo = false);
@@ -40,7 +40,7 @@ public:
 							   float Duration,
 							   FVector2D TargetValue,
 							   EDueEasingType DueEasingType,
-							   int& OutHandle,
+							   FActiveDUETweenHandle& OutHandle,
 							   int32 Steps = 0,
 							   int32 LoopCount = 0,
 							   const bool YoYo = false);
@@ -53,7 +53,7 @@ public:
 	                      float Duration,
 	                      FRotator TargetRotation,
 	                      EDueEasingType DueEasingType,
-	                      int& OutHandle,
+	                      FActiveDUETweenHandle& OutHandle,
 	                      int32 Steps = 0,
 	                      int32 LoopCount = 0,
 	                      const bool YoYo = false);
@@ -67,7 +67,7 @@ public:
 	                          float Duration,
 	                          float TargetValue,
 	                          EDueEasingType DueEasingType,
-	                          int& OutHandle,
+	                          FActiveDUETweenHandle& OutHandle,
 	                          int32 Steps = 0,
 	                          int32 LoopCount = 0,
 	                          const bool YoYo = false);
@@ -81,7 +81,7 @@ public:
 	                           float Duration,
 	                           double TargetValue,
 	                           EDueEasingType DueEasingType,
-	                           int& OutHandle,
+	                           FActiveDUETweenHandle& OutHandle,
 	                           int32 Steps = 0,
 	                           int32 LoopCount = 0,
 	                           const bool YoYo = false);
@@ -95,7 +95,7 @@ public:
 	                           float Duration,
 	                           FVector TargetValue,
 	                           EDueEasingType DueEasingType,
-	                           int& OutHandle,
+	                           FActiveDUETweenHandle& OutHandle,
 	                           int32 Steps = 0,
 	                           int32 LoopCount = 0,
 	                           const bool YoYo = false);
@@ -109,7 +109,7 @@ public:
 	                            float Duration,
 	                            FRotator TargetValue,
 	                            EDueEasingType DueEasingType,
-	                            int& OutHandle,
+	                            FActiveDUETweenHandle& OutHandle,
 	                            int32 Steps = 0,
 	                            int32 LoopCount = 0,
 	                            const bool YoYo = false);
@@ -123,26 +123,29 @@ public:
 							   float Duration,
 							   FVector2D TargetValue,
 							   EDueEasingType DueEasingType,
-							   int& OutHandle,
+							   FActiveDUETweenHandle& OutHandle,
 							   int32 Steps = 0,
 							   int32 LoopCount = 0,
 							   const bool YoYo = false);
 
 	// Pause an actively running tween
 	UFUNCTION(BlueprintCallable, Category = "DUETween", meta = (DefaultToSelf="Target"))
-	static void PauseDUETween(UObject* Target, const int& DUETweenHandle, bool& Success);
+	static void PauseDUETween(UObject* Target, FActiveDUETweenHandle DUETweenHandle, bool& Success);
 	
 	// Resume a paused tween
 	UFUNCTION(BlueprintCallable, Category = "DUETween", meta = (DefaultToSelf="Target"))
-	static void ResumeDUETween(UObject* Target, const int& DUETweenHandle, bool& Success);
+	static void ResumeDUETween(UObject* Target, FActiveDUETweenHandle DUETweenHandle, bool& Success);
 
 	// Fast-Forward a tween to it's end state
 	UFUNCTION(BlueprintCallable, Category = "DUETween", meta = (DefaultToSelf="Target"))
-	static void FastForwardDUETween(UObject* Target, const int& DUETweenHandle, bool& Success);
+	static void FastForwardDUETween(UObject* Target, FActiveDUETweenHandle DUETweenHandle, bool& Success);
 
 	// Stop and cancel a tween
 	UFUNCTION(BlueprintCallable, Category = "DUETween", meta = (DefaultToSelf="Target"))
-	static void StopDUETween(UObject* Target, const int& DUETweenHandle, bool& Success);
+	static void StopDUETween(UObject* Target, FActiveDUETweenHandle DUETweenHandle, bool& Success);
+
+	UFUNCTION(BlueprintCallable, Category = "DUETween")
+	static bool IsDUETweenHandleNull(FActiveDUETweenHandle Handle);
 
 private:
 	static FActiveDUETweenHandle CreateAndStartLatentAction(UObject* Target,

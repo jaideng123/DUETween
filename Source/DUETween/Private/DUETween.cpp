@@ -32,7 +32,7 @@ FActiveDUETweenHandle DUETween::DUEMove(const TWeakObjectPtr<UObject>& Target, c
 	UE_LOG(LogDUETween, Error, TEXT("Unsupported type for due move: %s"),
 	       *Target->StaticClass()->GetClassPathName().ToString());
 
-	return NULL_DUETWEEN_HANDLE;
+	return FActiveDUETweenHandle::NULL_HANDLE();
 }
 
 FActiveDUETweenHandle DUETween::DUERotate(const TWeakObjectPtr<UObject>& Target, const FRotator& TargetRotation,
@@ -64,7 +64,7 @@ FActiveDUETweenHandle DUETween::DUERotate(const TWeakObjectPtr<UObject>& Target,
 
 	UE_LOG(LogDUETween, Error, TEXT("Unsupported type for due rotate: %s"),
 	       *Target->StaticClass()->GetClassPathName().ToString());
-	return NULL_DUETWEEN_HANDLE;
+	return FActiveDUETweenHandle::NULL_HANDLE();
 }
 
 FActiveDUETweenHandle DUETween::DUEMove2D(const TWeakObjectPtr<UObject>& Target, const FVector2D& TargetValue,
@@ -85,7 +85,7 @@ FActiveDUETweenHandle DUETween::DUEMove2D(const TWeakObjectPtr<UObject>& Target,
 
 	UE_LOG(LogDUETween, Error, TEXT("Unsupported type for due move 2d: %s"),
 	       *Target->StaticClass()->GetClassPathName().ToString());
-	return NULL_DUETWEEN_HANDLE;
+	return FActiveDUETweenHandle::NULL_HANDLE();
 }
 
 bool DUETween::PauseDUETween(const TWeakObjectPtr<UObject>& Target, const FActiveDUETweenHandle& DUETweenHandle)

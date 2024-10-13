@@ -12,7 +12,7 @@ public:
 	// Tween Pool Methods
 	void InitTweenPool();
 	void ExpandPool(const int& Amount);
-	FActiveDUETween* GetTweenFromHandle(FActiveDUETweenHandle NextAvailableTween) const;
+	FActiveDUETween* GetTweenFromHandle(FActiveDUETweenHandle NextAvailableTween, const bool& CheckVersion) const;
 	FActiveDUETweenHandle GetTweenFromPool();
 	void ReturnTweenToPool(FActiveDUETweenHandle TweenToReturnHandle);
 	int GetCurrentPoolSize() const;
@@ -23,8 +23,7 @@ private:
 	int CurrentTotalPoolSize = 0;
 	int CurrentUnusedElements = 0;
 	FActiveDUETween* TweenPool = nullptr;
-	FActiveDUETweenHandle NextAvailableTween = NULL_DUETWEEN_HANDLE;
+	FActiveDUETweenHandle NextAvailableTween;
 	void ClearPool(FActiveDUETween*& Pool);
-	static FActiveDUETween* AllocateNewPool(const int& NewPoolSize);
 	FActiveDUETween* ReallocatePool(FActiveDUETween* OldPool, const int& NewPoolSize);
 };
