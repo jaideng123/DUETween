@@ -121,11 +121,10 @@ FActiveDUETween* FDUETweenPool::GetTweenFromHandle(const FActiveDUETweenHandle T
 		          TweenHandle.HandleIndex, TweenHandle.Version);
 		return nullptr;
 	}
-	// TODO: check bound world
 	return &TweenPool[TweenHandle.HandleIndex];
 }
 
-FActiveDUETweenHandle FDUETweenPool::GetTweenFromPool()
+FActiveDUETweenHandle FDUETweenPool::GetTweenFromPool(const TWeakObjectPtr<UWorld>& World = nullptr)
 {
 	DECLARE_CYCLE_STAT(TEXT("GetTweenFromPool"), STAT_GetTweenFromPool, STATGROUP_DUETween);
 	SCOPE_CYCLE_COUNTER(STAT_GetTweenFromPool);
@@ -157,6 +156,8 @@ FActiveDUETweenHandle FDUETweenPool::GetTweenFromPool()
 
 	HandleFromPool.Version += 1;
 
+	HandleFromPool.BoundWorld = World;
+
 	GetTweenFromHandle(HandleFromPool, false)->Handle = HandleFromPool;
 
 	return HandleFromPool;
@@ -180,6 +181,7 @@ void FDUETweenPool::ReturnTweenToPool(FActiveDUETweenHandle TweenToReturnHandle)
 		TweenToReturn->TweenData = FDUETweenData();
 		// Flip version negative to indicate that it's been freed
 		TweenToReturn->Handle.Version = FMath::Abs(TweenToReturn->Handle.Version) * -1;
+		TweenToReturn->Handle.BoundWorld = nullptr;
 		NextAvailableTween = TweenToReturn->Handle;
 
 		INC_DWORD_STAT(STAT_POOLED_TWEENS);

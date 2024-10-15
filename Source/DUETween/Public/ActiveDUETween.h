@@ -1,68 +1,9 @@
 #pragma once
 #include <functional>
 
+#include "ActiveDUETweenHandle.h"
 #include "DUEEasingFunctionLibrary.h"
 #include "Containers/Union.h"
-#include "ActiveDUETween.generated.h"
-
-USTRUCT(BlueprintType)
-struct FActiveDUETweenHandle
-{
-	GENERATED_BODY()
-
-	int HandleIndex;
-	int Version;
-	UWorld* BoundWorld;
-
-	FActiveDUETweenHandle()
-	{
-		HandleIndex = -1;
-		Version = -1;
-		BoundWorld = nullptr;
-	}
-	
-	static FActiveDUETweenHandle NULL_HANDLE()
-	{
-		return FActiveDUETweenHandle();
-	}
-
-	FActiveDUETweenHandle(int HandleIndex, UWorld* BoundWorld, int Version)
-		: HandleIndex(HandleIndex),
-		  Version(Version),
-		  BoundWorld(BoundWorld)
-	{
-	}
-
-
-	/**
-	 * Nullptr inequality operator.
-	 */
-	FORCEINLINE bool operator==(TYPE_OF_NULLPTR) const
-	{
-		return HandleIndex < 0;
-	}
-
-	/**
-	 * Nullptr inequality operator.
-	 */
-	FORCEINLINE bool operator!=(TYPE_OF_NULLPTR) const
-	{
-		return HandleIndex >= 0;
-	}
-
-
-	friend bool operator==(const FActiveDUETweenHandle& Lhs, const FActiveDUETweenHandle& RHS)
-	{
-		return Lhs.HandleIndex == RHS.HandleIndex
-			&& Lhs.Version == RHS.Version
-			&& Lhs.BoundWorld == RHS.BoundWorld;
-	}
-
-	friend bool operator!=(const FActiveDUETweenHandle& Lhs, const FActiveDUETweenHandle& RHS)
-	{
-		return !(Lhs == RHS);
-	}
-};
 
 using FValueContainer = TUnion<FVector, FVector2D, FRotator, float, double>;
 using FTweenUpdateCallback = TUniqueFunction<void(const FValueContainer&)>;
@@ -179,7 +120,7 @@ enum class EDueUpdateType
 };
 
 /**
- * Data that defines the characteristics of the tween
+ * Data structure that defines the characteristics of the tween
  */
 struct FDUETweenData
 {

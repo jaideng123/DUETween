@@ -31,7 +31,7 @@ FActiveDUETweenHandle UDUETweenSubsystem::AddTween(FDUETweenData& TweenData)
 {
 	DECLARE_CYCLE_STAT(TEXT("AddTween"), STAT_AddTween, STATGROUP_DUETween);
 	SCOPE_CYCLE_COUNTER(STAT_AddTween);
-	FActiveDUETween* NewTweenObject = GetTweenFromHandle(Pool.GetTweenFromPool());
+	FActiveDUETween* NewTweenObject = GetTweenFromHandle(Pool.GetTweenFromPool(GetWorld()));
 	ValidateTweenData(TweenData);
 	if (NewTweenObject == nullptr)
 	{

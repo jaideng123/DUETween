@@ -1,5 +1,6 @@
 #pragma once
 #include "ActiveDUETween.h"
+#include "DUETweenModule.h"
 #include "DUETweenSubsystem.h"
 
 class DUETWEEN_API DUETween

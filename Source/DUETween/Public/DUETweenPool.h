@@ -1,6 +1,7 @@
 #pragma once
-#include "ActiveDUETween.h"
+#include "ActiveDUETweenHandle.h"
 
+struct FActiveDUETween;
 LLM_DECLARE_TAG(FDUETweenPoolTag);
 
 /**
@@ -12,8 +13,8 @@ public:
 	// Tween Pool Methods
 	void InitTweenPool();
 	void ExpandPool(const int& Amount);
-	FActiveDUETween* GetTweenFromHandle(FActiveDUETweenHandle NextAvailableTween, const bool& CheckVersion) const;
-	FActiveDUETweenHandle GetTweenFromPool();
+	FActiveDUETween* GetTweenFromHandle(FActiveDUETweenHandle NextAvailableTween, const bool& CheckVersion = true) const;
+	FActiveDUETweenHandle GetTweenFromPool(const TWeakObjectPtr<UWorld>& World);
 	void ReturnTweenToPool(FActiveDUETweenHandle TweenToReturnHandle);
 	int GetCurrentPoolSize() const;
 	void Deinitialize();
