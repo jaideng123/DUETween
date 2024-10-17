@@ -2,8 +2,10 @@
 
 #include "ActiveDUETweenHandle.generated.h"
 
+using FTweenCompleteCallback = TUniqueFunction<void()>;
+
 USTRUCT(BlueprintType)
-struct FActiveDUETweenHandle
+struct DUETWEEN_API FActiveDUETweenHandle
 {
 	GENERATED_BODY()
 
@@ -57,7 +59,7 @@ struct FActiveDUETweenHandle
 
 	// Binds a completion event (performs a move on the argument)
 	// Note: Each tween can only have one completion callback
-	// FActiveDUETweenHandle& OnComplete(FTweenCompleteCallback& CompletionCallback);
+	FActiveDUETweenHandle& OnComplete(FTweenCompleteCallback& CompletionCallback);
 
 
 	/**

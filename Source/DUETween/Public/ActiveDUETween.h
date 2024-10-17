@@ -1,13 +1,15 @@
 #pragma once
 #include <functional>
 
-#include "ActiveDUETweenHandle.h"
-#include "DUEEasingFunctionLibrary.h"
 #include "Containers/Union.h"
+#include "ActiveDUETweenHandle.h"
 
+enum EDueEasingType : int;
 using FValueContainer = TUnion<FVector, FVector2D, FRotator, float, double>;
 using FTweenUpdateCallback = TUniqueFunction<void(const FValueContainer&)>;
 using FTweenCompleteCallback = TUniqueFunction<void()>;
+
+struct FActiveDUETweenHandle;
 
 /**
  * Status of a tween
@@ -136,12 +138,12 @@ struct FDUETweenData
 
 	TWeakObjectPtr<UObject> Target;
 	float Duration = 0;
-	EDueEasingType EasingType = EDueEasingType::Linear;
+	EDueEasingType EasingType;
 	int32 Steps = 0;
 	int32 LoopCount = 0;
 	bool ShouldYoYo = false;
 
-	FDUETweenData()
+	FDUETweenData(): EasingType()
 	{
 		TargetProperty = nullptr;
 		UpdateCallback = nullptr;

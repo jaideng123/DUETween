@@ -1,11 +1,10 @@
 #include "ActiveDUETweenHandle.h"
 
-#include "ActiveDUETween.h"
 #include "DUETweenSubsystem.h"
 
 FActiveDUETweenHandle& FActiveDUETweenHandle::PauseTween()
 {
-	if (BoundWorld == nullptr)
+	if (BoundWorld != nullptr)
 	{
 		BoundWorld->GetSubsystem<UDUETweenSubsystem>()->PauseTween(*this);
 	}
@@ -14,7 +13,7 @@ FActiveDUETweenHandle& FActiveDUETweenHandle::PauseTween()
 
 FActiveDUETweenHandle& FActiveDUETweenHandle::ResumeTween()
 {
-	if (BoundWorld == nullptr)
+	if (BoundWorld != nullptr)
 	{
 		BoundWorld->GetSubsystem<UDUETweenSubsystem>()->ResumeTween(*this);
 	}
@@ -23,7 +22,7 @@ FActiveDUETweenHandle& FActiveDUETweenHandle::ResumeTween()
 
 FActiveDUETweenHandle& FActiveDUETweenHandle::FastForwardTween()
 {
-	if (BoundWorld == nullptr)
+	if (BoundWorld != nullptr)
 	{
 		BoundWorld->GetSubsystem<UDUETweenSubsystem>()->FastForwardTween(*this);
 	}
@@ -32,7 +31,7 @@ FActiveDUETweenHandle& FActiveDUETweenHandle::FastForwardTween()
 
 FActiveDUETweenHandle& FActiveDUETweenHandle::StopTween()
 {
-	if (BoundWorld == nullptr)
+	if (BoundWorld != nullptr)
 	{
 		BoundWorld->GetSubsystem<UDUETweenSubsystem>()->StopTween(*this);
 	}
@@ -41,7 +40,7 @@ FActiveDUETweenHandle& FActiveDUETweenHandle::StopTween()
 
 FActiveDUETweenHandle& FActiveDUETweenHandle::SetSteps(int32 Steps)
 {
-	if (BoundWorld == nullptr)
+	if (BoundWorld != nullptr)
 	{
 		FActiveDUETween* Tween = BoundWorld->GetSubsystem<UDUETweenSubsystem>()->GetTweenFromHandle(*this);
 		if(Tween != nullptr)
@@ -54,7 +53,7 @@ FActiveDUETweenHandle& FActiveDUETweenHandle::SetSteps(int32 Steps)
 
 FActiveDUETweenHandle& FActiveDUETweenHandle::SetYoYo(bool ShouldYoYo)
 {
-	if (BoundWorld == nullptr)
+	if (BoundWorld != nullptr)
 	{
 		FActiveDUETween* Tween = BoundWorld->GetSubsystem<UDUETweenSubsystem>()->GetTweenFromHandle(*this);
 		if(Tween != nullptr)
@@ -67,7 +66,7 @@ FActiveDUETweenHandle& FActiveDUETweenHandle::SetYoYo(bool ShouldYoYo)
 
 FActiveDUETweenHandle& FActiveDUETweenHandle::SetLoopCount(int32 NewLoopCount)
 {
-	if (BoundWorld == nullptr)
+	if (BoundWorld != nullptr)
 	{
 		FActiveDUETween* Tween = BoundWorld->GetSubsystem<UDUETweenSubsystem>()->GetTweenFromHandle(*this);
 		if(Tween != nullptr)
@@ -78,15 +77,16 @@ FActiveDUETweenHandle& FActiveDUETweenHandle::SetLoopCount(int32 NewLoopCount)
 	return *this;
 }
 
-// FActiveDUETweenHandle& FActiveDUETweenHandle::OnComplete(FTweenCompleteCallback& CompletionCallback)
-// {
-// 	if (BoundWorld == nullptr)
-// 	{
-// 		FActiveDUETween* Tween = BoundWorld->GetSubsystem<UDUETweenSubsystem>()->GetTweenFromHandle(*this);
-// 		if(Tween != nullptr)
-// 		{
-// 			Tween->TweenData.CompletionCallback = MoveTemp(CompletionCallback);
-// 		}
-// 	}
-// 	return *this;
-// }
+FActiveDUETweenHandle& FActiveDUETweenHandle::OnComplete(FTweenCompleteCallback& CompletionCallback)
+{
+	if (BoundWorld != nullptr)
+	{
+		FActiveDUETween* Tween = BoundWorld->GetSubsystem<UDUETweenSubsystem>()->GetTweenFromHandle(*this);
+		if(Tween != nullptr)
+		{
+			Tween->TweenData.CompletionCallback = MoveTemp(CompletionCallback);
+		}
+	}
+	return *this;
+}
+

@@ -12,10 +12,7 @@ public:
 	                                           FProperty* Property,
 	                                           const T& TargetValue,
 	                                           const float& Duration,
-	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin,
-	                                           const int32& Steps = 0,
-	                                           const int32& LoopCount = 0,
-	                                           const bool& YoYo = false)
+	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin)
 	{
 		static_assert(GetDueValueTypeConst<T>() == EDueValueType::Unset, "Unsupported Type");
 
@@ -23,7 +20,6 @@ public:
 		TweenData.Target = Target;
 		TweenData.Duration = Duration;
 		TweenData.EasingType = Easing;
-		TweenData.Steps = Steps;
 		TweenData.UpdateType = EDueUpdateType::Property;
 		TweenData.TargetProperty = Property;
 		TweenData.TargetValue.SetSubtype<T>(TargetValue);
@@ -40,10 +36,7 @@ public:
 	                                           const FName& PropertyName,
 	                                           const T& TargetValue,
 	                                           const float& Duration,
-	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin,
-	                                           const int32& Steps = 0,
-	                                           const int32& LoopCount = 0,
-	                                           const bool& YoYo = false)
+	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin)
 	{
 		static_assert(GetDueValueTypeConst<T>() == EDueValueType::Unset, "Unsupported Type");
 
@@ -53,7 +46,7 @@ public:
 			UE_LOG(LogDUETween, Error, TEXT("No Property Found For:%s"), *PropertyName.ToString());
 			return FActiveDUETweenHandle::NULL_HANDLE();
 		}
-		return StartDUETween(Target, PropertyRef, TargetValue, Duration, Easing, Steps, LoopCount, YoYo);
+		return StartDUETween(Target, PropertyRef, TargetValue, Duration, Easing);
 	}
 
 	// Start Tween with callback update function
@@ -63,68 +56,41 @@ public:
 	                                           const T& StartingValue,
 	                                           const T& TargetValue,
 	                                           const float& Duration,
-	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin,
-	                                           const int32& Steps = 0,
-	                                           const int32& LoopCount = 0,
-	                                           const bool& YoYo = false)
+	                                           const EDueEasingType& Easing = EDueEasingType::InOutSin)
 	{
 		static_assert(GetDueValueTypeConst<T>() == EDueValueType::Unset, "Unsupported Type");
 
 		UpdateCallback.CheckCallable();
-		
+
 		FDUETweenData TweenData;
 		TweenData.Target = Target;
 		TweenData.Duration = Duration;
 		TweenData.EasingType = Easing;
-		TweenData.Steps = Steps;
 		TweenData.UpdateType = EDueUpdateType::Function;
 		TweenData.UpdateCallback = MoveTemp(UpdateCallback);
 		TweenData.StartingValue.SetSubtype<T>(StartingValue);
 		TweenData.TargetValue.SetSubtype<T>(TargetValue);
 		constexpr EDueValueType ValueType = GetDueValueType<T>();
 		TweenData.ValueType = ValueType;
-		TweenData.LoopCount = LoopCount;
-		TweenData.ShouldYoYo = YoYo;
 
 		const UWorld* World = Target.Get()->GetWorld();
 		return World->GetSubsystem<UDUETweenSubsystem>()->AddTween(TweenData);
 	}
 
 	static FActiveDUETweenHandle DUEMove(const TWeakObjectPtr<UObject>& Target,
-										   const FVector& TargetValue,
-										   const float& Duration,
-										   const EDueEasingType& Easing = EDueEasingType::InOutSin,
-										   const int32& Steps = 0,
-										   const int32& LoopCount = 0,
-										   const bool& YoYo = false);
+	                                     const FVector& TargetValue,
+	                                     const float& Duration,
+	                                     const EDueEasingType& Easing = EDueEasingType::InOutSin);
 
 	static FActiveDUETweenHandle DUERotate(const TWeakObjectPtr<UObject>& Target,
-									   const FRotator& TargetValue,
-									   const float& Duration,
-									   const EDueEasingType& Easing = EDueEasingType::InOutSin,
-									   const int32& Steps = 0,
-									   const int32& LoopCount = 0,
-									   const bool& YoYo = false);
+	                                       const FRotator& TargetValue,
+	                                       const float& Duration,
+	                                       const EDueEasingType& Easing = EDueEasingType::InOutSin);
 
 	static FActiveDUETweenHandle DUEMove2D(const TWeakObjectPtr<UObject>& Target,
-								   const FVector2D& TargetValue,
-								   const float& Duration,
-								   const EDueEasingType& Easing = EDueEasingType::InOutSin,
-								   const int32& Steps = 0,
-								   const int32& LoopCount = 0,
-								   const bool& YoYo = false);
-
-	// Pauses a currently running tween (returns true if successful)
-	static bool PauseDUETween(const TWeakObjectPtr<UObject>& Target, const FActiveDUETweenHandle& DUETweenHandle);
-
-	// Resumes a paused tween (returns true if successful)
-	static bool ResumeDUETween(const TWeakObjectPtr<UObject>& Target, const FActiveDUETweenHandle& DUETweenHandle);
-
-	// Skips to the end of a tween (returns true if successful)
-	static bool FastForwardDUETween(const TWeakObjectPtr<UObject>& Target, const FActiveDUETweenHandle& DUETweenHandle);
-
-	// Stops and cancels tween (returns true if successful)
-	static bool StopDUETween(const TWeakObjectPtr<UObject>& Target, const FActiveDUETweenHandle& DUETweenHandle);
+	                                       const FVector2D& TargetValue,
+	                                       const float& Duration,
+	                                       const EDueEasingType& Easing = EDueEasingType::InOutSin);
 
 	// Stops and cancels all tweens on a given target
 	static bool StopAllDUETweens(const TWeakObjectPtr<UObject>& Target);

@@ -130,19 +130,19 @@ public:
 
 	// Pause an actively running tween
 	UFUNCTION(BlueprintCallable, Category = "DUETween", meta = (DefaultToSelf="Target"))
-	static void PauseDUETween(UObject* Target, FActiveDUETweenHandle DUETweenHandle, bool& Success);
+	static void PauseDUETween(FActiveDUETweenHandle DUETweenHandle);
 	
 	// Resume a paused tween
 	UFUNCTION(BlueprintCallable, Category = "DUETween", meta = (DefaultToSelf="Target"))
-	static void ResumeDUETween(UObject* Target, FActiveDUETweenHandle DUETweenHandle, bool& Success);
+	static void ResumeDUETween(FActiveDUETweenHandle DUETweenHandle);
 
 	// Fast-Forward a tween to it's end state
 	UFUNCTION(BlueprintCallable, Category = "DUETween", meta = (DefaultToSelf="Target"))
-	static void FastForwardDUETween(UObject* Target, FActiveDUETweenHandle DUETweenHandle, bool& Success);
+	static void FastForwardDUETween(FActiveDUETweenHandle DUETweenHandle);
 
 	// Stop and cancel a tween
 	UFUNCTION(BlueprintCallable, Category = "DUETween", meta = (DefaultToSelf="Target"))
-	static void StopDUETween(UObject* Target, FActiveDUETweenHandle DUETweenHandle, bool& Success);
+	static void StopDUETween(FActiveDUETweenHandle DUETweenHandle);
 
 	UFUNCTION(BlueprintCallable, Category = "DUETween")
 	static bool IsDUETweenHandleNull(FActiveDUETweenHandle Handle);
