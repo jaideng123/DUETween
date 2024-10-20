@@ -396,19 +396,17 @@ void UDUETweenSubsystem::RemoveTweenFromActiveChain(FActiveDUETweenHandle TweenH
 		}
 		else
 		{
-			FActiveDUETween* PreviousNode = Pool.GetTweenFromHandle(TweenToRemove->TweenPtr.ActiveNode.LastActiveTween, true);
-			FActiveDUETween* NextNode = Pool.GetTweenFromHandle(TweenToRemove->TweenPtr.ActiveNode.NextActiveTween, true);
-			if (PreviousNode != nullptr)
+			FActiveDUETweenHandle PreviousNodeHandle = TweenToRemove->TweenPtr.ActiveNode.LastActiveTween;
+			FActiveDUETweenHandle NextNodeHandle = TweenToRemove->TweenPtr.ActiveNode.NextActiveTween;
+			if (PreviousNodeHandle != nullptr)
 			{
+			    FActiveDUETween* PreviousNode = Pool.GetTweenFromHandle(PreviousNodeHandle, true);
 				PreviousNode->TweenPtr.ActiveNode.NextActiveTween = TweenToRemove->TweenPtr.ActiveNode.NextActiveTween;
-				UE_LOG(LogDUETween, Verbose, TEXT("Tween: %u next now points to Tween: %u"), PreviousNode->ID,
-				       NextNode != nullptr ?NextNode->ID : 0);
 			}
-			if (NextNode != nullptr)
+			if (NextNodeHandle != nullptr)
 			{
+            	FActiveDUETween* NextNode = Pool.GetTweenFromHandle(NextNodeHandle, true);
 				NextNode->TweenPtr.ActiveNode.LastActiveTween = TweenToRemove->TweenPtr.ActiveNode.LastActiveTween;
-				UE_LOG(LogDUETween, Verbose, TEXT("Tween: %u previous now points to Tween: %u"), NextNode->ID,
-				       PreviousNode != nullptr ? PreviousNode->ID: 0);
 			}
 		}
 		DEC_DWORD_STAT(STAT_ACTIVE_TWEENS);

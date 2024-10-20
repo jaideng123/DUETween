@@ -106,13 +106,12 @@ void FDUETweenPool::ExpandPool(const int& Amount)
 	SET_DWORD_STAT(STAT_TWEEN_POOL_SIZE, CurrentTotalPoolSize);
 }
 
-FActiveDUETween* FDUETweenPool::GetTweenFromHandle(const FActiveDUETweenHandle TweenHandle,
+FActiveDUETween* FDUETweenPool::GetTweenFromHandle(const FActiveDUETweenHandle& TweenHandle,
                                                    const bool& CheckVersion) const
 {
 	if (TweenHandle == nullptr || TweenHandle.HandleIndex >= CurrentTotalPoolSize)
 	{
-		UE_LOGFMT(LogDUETween, Error, "Trying to access invalid tween",
-		          TweenHandle.HandleIndex, TweenHandle.Version);
+		UE_LOGFMT(LogDUETween, Error, "Trying to access invalid tween");
 		return nullptr;
 	}
 	if (CheckVersion && TweenPool[TweenHandle.HandleIndex].Handle.Version != TweenHandle.Version)
