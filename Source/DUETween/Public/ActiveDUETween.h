@@ -1,5 +1,4 @@
 #pragma once
-#include <functional>
 
 #include "Containers/Union.h"
 #include "ActiveDUETweenHandle.h"
@@ -117,12 +116,12 @@ enum class EDueUpdateType
 	/**
 	 * When adding a new type update:
 	 * 1. This
-	 * 3. Set and GetCurrentValue
+	 * 2. Set and GetCurrentValue
 	 */
 };
 
 /**
- * Data structure that defines the characteristics of the tween
+ * Data structure that defines the characteristics and callbacks for a tween
  */
 struct FDUETweenData
 {
