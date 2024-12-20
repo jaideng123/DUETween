@@ -78,12 +78,12 @@ public:
 	}
 
 	static FActiveDUETweenHandle DUEMove(const TWeakObjectPtr<UObject>& Target,
-	                                     const FVector& TargetValue,
+	                                     const FVector& TargetLocation,
 	                                     const float& Duration,
 	                                     const EDueEasingType& Easing = EDueEasingType::InOutSin);
 
 	static FActiveDUETweenHandle DUERotate(const TWeakObjectPtr<UObject>& Target,
-	                                       const FRotator& TargetValue,
+	                                       const FRotator& TargetRotation,
 	                                       const float& Duration,
 	                                       const EDueEasingType& Easing = EDueEasingType::InOutSin);
 
