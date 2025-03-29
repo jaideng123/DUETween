@@ -31,3 +31,10 @@ Feel free to make a fork of your own or open an issue if you require more assist
 5. Enable the Plugin by go to Edit > Plugins, Search for `DUETween` and check the box.
 6. Restart the Unreal Engine editor to apply the plugin.
 7. Load up the test map under `Content/TweenTestMap.umap` and hit play to verify that everything's working
+
+# Misc
+## Tuning your Tween Pool Settings
+For performance and memory efficiency. Active tweens in DUETween are lumped together into a pre-allocated pool that initializes at a size of about 100. For ease of use, this pool will automatically grow by about 100 as you use more concurrent tweens, but will max out at 10000 concurren tweens.
+
+If you have strict memory requirements (or just like tinkering for perf) you can adjust these in your project settings under `Engine - Due Tween Settings`
+![image](https://github.com/user-attachments/assets/c9f560ec-85b7-4333-92e6-9e6ba3a776c3)
