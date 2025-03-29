@@ -22,4 +22,6 @@ I built DUETween because I fell in love with [DOTween](https://dotween.demigiant
    1. Alternatively, you can just download the zip file and extract it into this folder
    2. If you're more advanced, I would recommend installing this as a submodule in your project see [Adding A SubModule](https://gist.github.com/gitaarik/8735255#adding-a-submodule)
 4. Rebuild and re-open your project
-5. Load up the test map under `Content/TweenTestMap.umap` and hit play to verify that everything's working
+5. Enable the Plugin by go to Edit > Plugins, Search for `DUETween` and check the box.
+6. Restart the Unreal Engine editor to apply the plugin.
+7. Load up the test map under `Content/TweenTestMap.umap` and hit play to verify that everything's working
