@@ -18,6 +18,8 @@ I built DUETween because I fell in love with [DOTween](https://dotween.demigiant
 # How to install:
 1. Navigate to your Unreal Engine project's "Plugins" directory (create it if it doesn't exist):
 `cd path/to/your/project/Plugins`
-2. Clone the plugin repository into that folder with: `https://github.com/jaideng123/DUETween.git`
-3. Rebuild and re-open your project
-4. Load up the test map under `Content/TweenTestMap.umap` to test that everything's working
+2. Clone the plugin repository into that folder with: `git clone https://github.com/jaideng123/DUETween.git`
+   1. Alternatively, you can just download the zip file and extract it into this folder
+   2. If you're more advanced, I would recommend installing this as a submodule in your project see [Adding A SubModule](https://gist.github.com/gitaarik/8735255#adding-a-submodule)
+4. Rebuild and re-open your project
+5. Load up the test map under `Content/TweenTestMap.umap` and hit play to verify that everything's working
