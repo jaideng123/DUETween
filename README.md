@@ -14,3 +14,10 @@ I built DUETween because I fell in love with [DOTween](https://dotween.demigiant
 ## C++ API:
 
 ## Blueprint API:
+
+# How to install:
+1. Navigate to your Unreal Engine project's "Plugins" directory (create it if it doesn't exist):
+`cd path/to/your/project/Plugins`
+2. Clone the plugin repository into that folder with: `https://github.com/jaideng123/DUETween.git`
+3. Rebuild and re-open your project
+4. Load up the test map under `Content/TweenTestMap.umap` to test that everything's working
