@@ -1,6 +1,8 @@
 # What is DUETween?
 DUETween is a framework that allows you to add quick & easy animations to actors in your Unreal Engine games. It provides APIs for both Blueprint and C++ and aims to be flexible, yet memory and runtime efficient.
 
+![due-tween](https://github.com/user-attachments/assets/054ab0b2-5c5a-4fbb-8981-65696fb796ea)
+
 Current features:
    * Provides an extended library of easing functions (See [easings.net](https://easings.net/)).
    * Lean and efficient using ~1.5mb memory and ticking at <0.5ms for 4000 concurrent tweens.
