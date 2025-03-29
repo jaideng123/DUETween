@@ -15,6 +15,12 @@ I built DUETween because I fell in love with [DOTween](https://dotween.demigiant
 
 ## Blueprint API:
 
+# Compatibility:
+DUETween was built primarily for **Unreal Engine 5** and has been tested with all versions released between 5.0 and 5.5.
+
+There's nothing major that would prevent DUETween from working in UE 4 other than some minor code changes 
+Feel free to make a fork of your own or just shoot open an issue and I can start working on a branch for UE4.
+
 # How to install:
 1. Navigate to your Unreal Engine project's "Plugins" directory (create it if it doesn't exist):
 `cd path/to/your/project/Plugins`
