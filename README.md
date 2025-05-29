@@ -21,13 +21,17 @@ DUETween::DueMove(this, TargetLocation, 1.0);
 // Basic Rotation:
 DUETween::DUERotate(this, TargetRotation, 1.0);
 // 2D Movement (for UI elements mainly):
-DUETween::DueMove(this, Target2DLocation, 1.0);
+DUETween::DueMove2D(this, Target2DLocation, 1.0);
+```
+Every tween can be used with an of the [available easing functions](https://github.com/jaideng123/DUETween/blob/main/Source/DUETween/Public/DUEEasingFunctionLibrary.h):
+```
+DUETween::DueMove(this, TargetLocation, 1.0, EDueEasingType::Linear);
 ```
 If you have a specific property on a UObject you want to tween you can reference it by name:
 ```
 DUETween::StartDUETween<float>(this,"MyProperty", 50.0, 1.0);
 ```
-Each tween returns a handle that you can use to start stop or modify tween properties:
+Each tween returns a handle that you can use to control playback as well as modify tween properties:
 ```
 FActiveDUETweenHandle Handle = DUETween::DueMove(this, TargetLocation, 1.0);
 // Stop and cancel tween
