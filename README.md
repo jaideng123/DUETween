@@ -14,8 +14,53 @@ I built DUETween because I fell in love with [DOTween](https://dotween.demigiant
 
 # How does it work?
 ## C++ API:
-
+To get you started there are some handy methods to do common tasks like rotation and movement:
+```
+// Basic Movement:
+DUETween::DueMove(this, TargetLocation, 1.0);
+// Basic Rotation:
+DUETween::DUERotate(this, TargetRotation, 1.0);
+// 2D Movement (for UI elements mainly):
+DUETween::DueMove(this, Target2DLocation, 1.0);
+```
+If you have a specific property on a UObject you want to tween you can reference it by name:
+```
+DUETween::StartDUETween<float>(this,"MyProperty", 50.0, 1.0);
+```
+Each tween returns a handle that you can use to start stop or modify tween properties:
+```
+FActiveDUETweenHandle Handle = DUETween::DueMove(this, TargetLocation, 1.0);
+// Stop and cancel tween
+Handle.StopTween();
+// Pause and resume tween
+Handle.PauseTween();
+Handle.Resume();
+// Updates the step count (chunkiness) of the tween
+Handle.SetSteps(10);
+// Updates whether or not this tween should yoyo (return to it's starting position)
+Handle.SetYoYo(true);
+// Updates Number Of Loops this tween will do before completing (-1 = infinite)
+Handle.SetLoopCount(-1);
+// Binds a completion event
+FTweenCompleteCallback& CompletionCallback;
+Handle.OnComplete(CompletionCallback);
+```
+(C++ Only) You can also use Lambdas for custom tweens, here's an example where I use a lambda tween to evaluate a custome curve:
+```
+const FVector TargetLocation = BallGripStartPosition.GetValue() + GetActorForwardVector() *
+  StartDistance;
+const FVector StartPosition = BallGripStartPosition.GetValue();
+FTweenUpdateCallback TargetCallback = [TargetLocation,StartPosition,Curve = RunUpCurve.GetRichCurveConst(), this](
+  const FValueContainer& UpdatedValue)
+{
+  const FVector CurrentLocation = FMath::Lerp(StartPosition, TargetLocation,
+                                              Curve->Eval(UpdatedValue.GetSubtype<float>()));
+  this->SetActorLocation(CurrentLocation);
+};
+DUETween::StartDUETween<float>(this, TargetCallback, 0.0, 1.0, RunUpTimeMS);
+```
 ## Blueprint API:
+Documenation coming soon
 
 # Version Compatibility:
 DUETween was built primarily for **Unreal Engine 5** and has been tested with all versions released between 5.0 and 5.5.
