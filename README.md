@@ -15,7 +15,7 @@ I built DUETween because I fell in love with [DOTween](https://dotween.demigiant
 # How does it work?
 ## C++ API:
 To get you started there are some handy methods to do common tasks like rotation and movement:
-```
+``` cpp
 // Basic Movement:
 DUETween::DueMove(this, TargetLocation, 1.0);
 // Basic Rotation:
@@ -24,15 +24,15 @@ DUETween::DUERotate(this, TargetRotation, 1.0);
 DUETween::DueMove2D(this, Target2DLocation, 1.0);
 ```
 Every tween can be used with any of the [available easing functions](https://github.com/jaideng123/DUETween/blob/main/Source/DUETween/Public/DUEEasingFunctionLibrary.h):
-```
+``` cpp
 DUETween::DueMove(this, TargetLocation, 1.0, EDueEasingType::Linear);
 ```
 If you have a specific property on a UObject you want to tween you can reference it by name:
-```
+``` cpp
 DUETween::StartDUETween<float>(this,"MyProperty", 50.0, 1.0);
 ```
 Each tween returns a handle that you can use to control playback as well as modify tween properties:
-```
+``` cpp
 FActiveDUETweenHandle Handle = DUETween::DueMove(this, TargetLocation, 1.0);
 // Stop and cancel tween
 Handle.StopTween();
@@ -49,8 +49,8 @@ Handle.SetLoopCount(-1);
 FTweenCompleteCallback& CompletionCallback;
 Handle.OnComplete(CompletionCallback);
 ```
-(C++ Only) You can also use Lambdas for custom tweens, here's an example where I use a lambda tween to evaluate a custome curve:
-```
+(C++ Only) You can also use Lambdas for custom tween callbacks, here's an example where I use a lambda tween to evaluate a custome curve:
+``` cpp
 const FVector TargetLocation = BallGripStartPosition.GetValue() + GetActorForwardVector() *
   StartDistance;
 const FVector StartPosition = BallGripStartPosition.GetValue();
