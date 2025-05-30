@@ -23,7 +23,7 @@ DUETween::DUERotate(this, TargetRotation, 1.0);
 // 2D Movement (for UI elements mainly):
 DUETween::DueMove2D(this, Target2DLocation, 1.0);
 ```
-Every tween can be used with an of the [available easing functions](https://github.com/jaideng123/DUETween/blob/main/Source/DUETween/Public/DUEEasingFunctionLibrary.h):
+Every tween can be used with any of the [available easing functions](https://github.com/jaideng123/DUETween/blob/main/Source/DUETween/Public/DUEEasingFunctionLibrary.h):
 ```
 DUETween::DueMove(this, TargetLocation, 1.0, EDueEasingType::Linear);
 ```
