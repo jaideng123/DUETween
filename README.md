@@ -64,7 +64,7 @@ FTweenUpdateCallback TargetCallback = [TargetLocation,StartPosition,Curve = RunU
 DUETween::StartDUETween<float>(this, TargetCallback, 0.0, 1.0, RunUpTimeMS);
 ```
 ## Blueprint API:
-Documentation coming soon (for now refer to C++, the nodes match the functions available there)
+<iframe src="https://blueprintue.com/render/zc41f01p/" scrolling="no" allowfullscreen></iframe>
 
 # Version Compatibility:
 DUETween was built primarily for **Unreal Engine 5** and has been tested with all versions released between 5.0 and 5.5.
