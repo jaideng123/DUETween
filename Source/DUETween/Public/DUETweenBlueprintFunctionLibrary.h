@@ -32,7 +32,7 @@ public:
 	                    int32 LoopCount = 0,
 	                    const bool YoYo = false);
 
-	// Run a tween that will change a vector2d property from it's current value to the target value
+	// Run a tween to move a canvas panel slot from it's current location to a target location
 	UFUNCTION(BlueprintCallable, Category = "DUETween",
 		meta = (Latent, LatentInfo = "LatentInfo", DefaultToSelf="Target", Duration="1.0f"))
 	static void DueMove2D(UObject* Target,
@@ -44,6 +44,18 @@ public:
 							   int32 Steps = 0,
 							   int32 LoopCount = 0,
 							   const bool YoYo = false);
+	
+	// Run a tween that will change the angle of a widget from it's current value to a target rotation
+	UFUNCTION(BlueprintCallable, Category = "DUETween",
+	meta = (Latent, LatentInfo = "LatentInfo", DefaultToSelf="Target", Duration="1.0f"))
+	static void DueRotate2D(UObject* Target,
+	                        FLatentActionInfo LatentInfo,
+	                        float Duration, float TargetValue,
+	                        EDueEasingType DueEasingType,
+	                        FActiveDUETweenHandle& OutHandle,
+	                        int32 Steps,
+	                        int32 LoopCount,
+	                        bool YoYo);
 
 	// Run a tween to rotate an actor/component from it's current rotation to a target rotation
 	UFUNCTION(BlueprintCallable, Category = "DUETween",

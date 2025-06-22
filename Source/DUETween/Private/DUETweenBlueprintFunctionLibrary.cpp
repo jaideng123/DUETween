@@ -44,6 +44,24 @@ void UDUETweenBlueprintFunctionLibrary::DueMove2D(UObject* Target,
 	OutHandle = CreateAndStartLatentAction(Target, LatentInfo, Handle);
 }
 
+void UDUETweenBlueprintFunctionLibrary::DueRotate2D(UObject* Target,
+												  const FLatentActionInfo LatentInfo,
+												  const float Duration,
+												  const float TargetValue,
+												  const EDueEasingType DueEasingType,
+												  FActiveDUETweenHandle& OutHandle,
+												  const int32 Steps,
+												  const int32 LoopCount,
+												  const bool YoYo)
+{
+	FActiveDUETweenHandle Handle = DUETween::DUERotate2D(Target, TargetValue, Duration, DueEasingType);
+	Handle.SetSteps(Steps);
+	Handle.SetLoopCount(LoopCount);
+	Handle.SetYoYo(YoYo);
+	
+	OutHandle = CreateAndStartLatentAction(Target, LatentInfo, Handle);
+}
+
 void UDUETweenBlueprintFunctionLibrary::DueRotate(UObject* Target,
                                                   const FLatentActionInfo LatentInfo,
                                                   const float Duration,

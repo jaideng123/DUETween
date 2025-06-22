@@ -91,6 +91,9 @@ public:
 	                                       const FVector2D& TargetValue,
 	                                       const float& Duration,
 	                                       const EDueEasingType& Easing = EDueEasingType::InOutSin);
+	
+	static FActiveDUETweenHandle DUERotate2D(const TWeakObjectPtr<UObject>& Target, const float& TargetRotation, const float& Duration,
+	                                         const EDueEasingType& Easing);
 
 	// Stops and cancels all tweens on a given target
 	static bool StopAllDUETweens(const TWeakObjectPtr<UObject>& Target);

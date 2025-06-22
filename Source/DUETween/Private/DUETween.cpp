@@ -1,5 +1,6 @@
 #include "DUETween.h"
 
+#include "Blueprint/UserWidget.h"
 #include "Components/CanvasPanelSlot.h"
 
 FActiveDUETweenHandle DUETween::DUEMove(const TWeakObjectPtr<UObject>& Target, const FVector& TargetLocation,
@@ -82,6 +83,25 @@ FActiveDUETweenHandle DUETween::DUEMove2D(const TWeakObjectPtr<UObject>& Target,
 
 	UE_LOG(LogDUETween, Error, TEXT("Unsupported type for due move 2d: %s"),
 	       *Target->StaticClass()->GetClassPathName().ToString());
+	return FActiveDUETweenHandle::NULL_HANDLE();
+}
+
+FActiveDUETweenHandle DUETween::DUERotate2D(const TWeakObjectPtr<UObject>& Target, const float& TargetRotation,
+										  const float& Duration, const EDueEasingType& Easing)
+{
+	if (UWidget* TargetAsUserWidget = Cast<UWidget>(Target);TargetAsUserWidget)
+	{
+		float StartingValue = TargetAsUserWidget->GetRenderTransformAngle();
+		FTweenUpdateCallback TargetCallback = [TargetAsUserWidget](const FValueContainer& UpdatedValue)
+		{
+			TargetAsUserWidget->SetRenderTransformAngle(UpdatedValue.GetSubtype<float>());
+		};
+		return StartDUETween(Target, TargetCallback, StartingValue, TargetRotation, Duration,
+							 Easing);
+	}
+
+	UE_LOG(LogDUETween, Error, TEXT("Unsupported type for due rotate 2d: %s"),
+		   *Target->StaticClass()->GetClassPathName().ToString());
 	return FActiveDUETweenHandle::NULL_HANDLE();
 }
 
